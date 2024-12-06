@@ -1,0 +1,186 @@
+﻿using Shared.Domain.Settings;
+using Services.Auth.Persistence;
+using Services.Auth.Application;
+using Microsoft.AspNetCore.ResponseCompression;
+using Services.Auth.Api.Settings;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using OpenTelemetry.Exporter;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+
+namespace Services.Auth.Api.Extensions;
+
+internal static class Services
+{
+    public static void AddServices(this WebApplicationBuilder builder)
+    {
+        IServiceCollection services = builder.Services;
+        IConfiguration configuration = builder.Configuration;
+
+        services.AddControllers();
+        services.AddEndpointsApiExplorer();
+
+        services.AddResponseCompression(options =>
+        {
+            options.Providers.Add<GzipCompressionProvider>();
+            options.EnableForHttps = true;
+        });
+
+        services.AddOptions<JwtSettings>()
+            .BindConfiguration(nameof(JwtSettings))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        services.AddOptions<RelationalDatabaseSettings>()
+            .BindConfiguration(nameof(RelationalDatabaseSettings))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+        services.AddOptions<NoRelationalDatabaseSettings>()
+            .BindConfiguration(nameof(NoRelationalDatabaseSettings))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+        services.AddOptions<CacheDatabaseSettings>()
+            .BindConfiguration(nameof(CacheDatabaseSettings))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+        services.AddOptions<MessageQueueSettings>()
+            .BindConfiguration(nameof(MessageQueueSettings))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        services.AddPersistenceServices()
+            .AddApplicationServices();
+
+        services.AddJWt()
+            .AddCustomSwagger()
+            .AddHealthCheck()
+            .AddTelemetries(configuration);
+    }
+
+    private static IServiceCollection AddJWt(this IServiceCollection services)
+    {
+        services
+            .AddAuthorization()
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                IServiceScope serviceScope = services.BuildServiceProvider().CreateScope();
+
+                IOptions<JwtSettings>? jwtSettingSetup = serviceScope.ServiceProvider.GetService<IOptions<JwtSettings>>();
+                ArgumentNullException.ThrowIfNull(jwtSettingSetup, nameof(jwtSettingSetup));
+                JwtSettings jwtSetting = jwtSettingSetup.Value;
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = jwtSetting.ValidateIssuerSigningKey,
+                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtSetting.IssuerSigningKey)),
+                    RequireExpirationTime = jwtSetting.RequireExpirationTime,
+                    ValidateLifetime = jwtSetting.ValidateLifetime,
+                    ValidateIssuer = jwtSetting.ValidateIssuer,
+                    ValidIssuer = jwtSetting.ValidIssuer,
+                    ValidAudience = jwtSetting.ValidAudience,
+                    ValidateAudience = jwtSetting.ValidateAudience,
+                    ClockSkew = TimeSpan.Zero,
+                };
+            });
+
+        return services;
+    }
+
+    private static IServiceCollection AddCustomSwagger(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(options =>
+        {
+            options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Name = "Authorization",
+                Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+                Description = "JWT Authorization header using the Bearer scheme."
+            });
+
+            options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement {
+                    {
+                        new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                        {
+                                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                                {
+                                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                                    Id = "Bearer"
+                                }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
+
+            string filePath = Path.Combine(AppContext.BaseDirectory, "SwaggerDocs.xml");
+            options.IncludeXmlComments(filePath);
+        });
+
+        return services;
+    }
+
+
+    private static IServiceCollection AddHealthCheck(this IServiceCollection services)
+    {
+        services.AddHealthChecks()
+            .AddNpgSql(
+                sp => sp.GetRequiredService<IOptions<RelationalDatabaseSettings>>().Value.ConnectionString,
+                name: "PostgreSQL",
+                tags: new[] { "database", "relational" }
+            )
+            .AddMongoDb(
+                sp => sp.GetRequiredService<IOptions<NoRelationalDatabaseSettings>>().Value.ConnectionString,
+                name: "MongoDB",
+                tags: new[] { "database", "no relational" })
+            .AddRedis(
+                sp => sp.GetRequiredService<IOptions<CacheDatabaseSettings>>().Value.ConnectionString,
+                name: "Redis",
+                tags: new[] { "database", "in memory" })
+            .AddRabbitMQ(
+                services.BuildServiceProvider().GetRequiredService<IOptions<MessageQueueSettings>>().Value.Url,
+                name: "RabbitMQ",
+                tags: new[] { "queue", "messaging" }
+            );
+
+        return services;
+    }
+
+    private static IServiceCollection AddTelemetries(this IServiceCollection services, IConfiguration configuration)
+    {
+        string? otlpEndpointEnv = configuration["OTEL_EXPORTER_OTLP_ENDPOINT"];
+        ArgumentNullException.ThrowIfNullOrEmpty(otlpEndpointEnv);
+
+        Uri otlpEndpoint = new Uri(otlpEndpointEnv);
+
+        Action<OtlpExporterOptions> otlpAction =
+            options => options.Endpoint = otlpEndpoint;
+
+        services.AddOpenTelemetry()
+            .WithMetrics(opt =>
+                opt.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Services.Auth.Api"))
+                   .AddMeter("Service_Auth_OpenRemoteManage")
+                   .AddAspNetCoreInstrumentation()
+                   .AddRuntimeInstrumentation()
+                   .AddProcessInstrumentation()
+                   .AddPrometheusExporter()
+                   .AddOtlpExporter(otlpAction)
+            )
+            .WithTracing(opt =>
+                opt.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Services.Auth.Api"))
+                   .AddAspNetCoreInstrumentation()
+                   .AddEntityFrameworkCoreInstrumentation()
+                   .AddHttpClientInstrumentation()
+                   .AddQuartzInstrumentation()
+                   .AddOtlpExporter(otlpAction)
+            );
+
+        services.AddMetrics();
+
+        return services;
+    }
+}

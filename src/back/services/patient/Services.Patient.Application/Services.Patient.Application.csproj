@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\shared\Shared.Message.Queue.Requests\Shared.Message.Queue.Requests.csproj" />
+  </ItemGroup>
+
 </Project>
