@@ -10,4 +10,14 @@
     <ProjectReference Include="..\Services.Auth.Domain\Services.Auth.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UseCases\RefreshToken\" />
+    <Folder Include="UseCases\Signin\" />
+    <Folder Include="UseCases\Signup\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FastEndpoints" Version="5.32.0" />
+  </ItemGroup>
+
 </Project>

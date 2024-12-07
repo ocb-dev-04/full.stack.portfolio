@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace Services.Auth.Api.Extensions;
 
@@ -54,9 +55,9 @@ internal static class Services
             .AddApplicationServices();
 
         services.AddJWt()
-            .AddCustomSwagger()
-            .AddHealthCheck()
-            .AddTelemetries(configuration);
+            .AddCustomSwagger();
+            //.AddHealthCheck()
+            //.AddTelemetries(configuration);
     }
 
     private static IServiceCollection AddJWt(this IServiceCollection services)
@@ -116,14 +117,10 @@ internal static class Services
                         Array.Empty<string>()
                     }
                 });
-
-            string filePath = Path.Combine(AppContext.BaseDirectory, "SwaggerDocs.xml");
-            options.IncludeXmlComments(filePath);
         });
 
         return services;
     }
-
 
     private static IServiceCollection AddHealthCheck(this IServiceCollection services)
     {

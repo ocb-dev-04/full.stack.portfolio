@@ -1,4 +1,6 @@
+using FastEndpoints;
 using Services.Auth.Api.Extensions;
+using Services.Auth.Api.Middlewares;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -6,8 +8,7 @@ builder.AddServices();
 
 WebApplication app = builder.Build();
 
-app.UseCustomHealthChecks();
-app.UseRateLimiter();
+//app.UseCustomHealthChecks();
 
 if (app.Environment.IsDevelopment())
 {
@@ -22,6 +23,8 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseMiddleware<GlobalExceptionHandler>();
+
+app.UseFastEndpoints();
 
 app.Run();
