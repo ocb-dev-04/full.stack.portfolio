@@ -50,16 +50,11 @@ services:
     image: hashicorp/consul:latest
     container_name: consul_dev
     environment:
-      CONSUL_HTTP_TOKEN: noijknsdafjwj980flksnfnIUP098jhekrpwoerrwer==
+      CONSUL_HTTP_TOKEN: "noijknsdafjwj980flksnfnIUP098jhekrpwoerrwer=="
     ports:
       - "8500:8500" # Consul UI
     networks:
       - dev_network
-    deploy:
-      resources:
-        limits:
-          cpus: "0.1"
-          memory: 40M
 
   otel-collector:
     image: otel/opentelemetry-collector:0.95.0

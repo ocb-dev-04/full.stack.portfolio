@@ -13,6 +13,7 @@ using OpenTelemetry.Trace;
 using Services.Auth.Application.Settings;
 using Shared.Common.Helper;
 using Common.Services;
+using Shared.Consul.Configuration;
 
 namespace Services.Auth.Api.Extensions;
 
@@ -60,6 +61,7 @@ internal static class Services
 
         services.AddJWt()
             .AddCustomSwagger()
+            .AddConsulServices()
             .AddHealthCheck()
             .AddTelemetries(configuration);
     }

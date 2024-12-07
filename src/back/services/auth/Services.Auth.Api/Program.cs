@@ -1,4 +1,5 @@
 using Services.Auth.Persistence;
+using Shared.Consul.Configuration;
 using Services.Auth.Api.Extensions;
 using Shared.Global.Sources.Middlewares;
 
@@ -24,5 +25,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
+
+app.UseConsultServiceRegistry();
 
 app.Run();

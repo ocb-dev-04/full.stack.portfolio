@@ -8,7 +8,7 @@ namespace Shared.Consul.Configuration;
 
 public static class ConsulBuilders
 {
-    public static void AddServiceRegistry(this WebApplication app)
+    public static void UseConsultServiceRegistry(this WebApplication app)
     {
         IOptions<ServiceRegistrationSettings> settings = app.Services.GetRequiredService<IOptions<ServiceRegistrationSettings>>();
         ArgumentNullException.ThrowIfNull(settings.Value, nameof(settings));

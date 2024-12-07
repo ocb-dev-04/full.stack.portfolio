@@ -7,7 +7,7 @@ namespace Shared.Consul.Configuration;
 
 public static class ConsulServices
 {
-    public static IServiceCollection AddConsult(this IServiceCollection services)
+    public static IServiceCollection AddConsulServices(this IServiceCollection services)
     {
         services.AddOptions<ConsulSettings>()
             .BindConfiguration(nameof(ConsulSettings))
