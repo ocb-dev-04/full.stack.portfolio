@@ -2,7 +2,7 @@
 
 namespace Services.Auth.Application.UseCases;
 
-public sealed class CheckAccessEndpoint : EndpointWithoutRequest
+internal sealed class CheckAccessEndpoint : EndpointWithoutRequest
 {
     public override void Configure()
     {
@@ -14,8 +14,7 @@ public sealed class CheckAccessEndpoint : EndpointWithoutRequest
             s.Responses[401] = "Invalid JWT";
         });
     }
+
     public override async Task HandleAsync(CancellationToken ct)
-    {
-        await SendAsync(string.Empty);
-    }
+        => await SendAsync(string.Empty, cancellation: ct);
 }
