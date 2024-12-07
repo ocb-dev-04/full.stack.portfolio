@@ -1,10 +1,10 @@
 ﻿using Common.Services.Hashing.Abstractions;
-using Common.Services.Mails.Abstractions;
 using CQRS.MediatR.Helper.Abstractions.Messaging;
 using Microsoft.Extensions.Options;
+using Services.Auth.Application.Providers;
 using Services.Auth.Application.Settings;
+using Services.Auth.Domain.Abstractions;
 using Services.Auth.Domain.Entities;
-using Services.Auth.Domain.Errors;
 using Shared.Common.Helper.ErrorsHandler;
 using Shared.Common.Helper.Providers;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,31 +15,35 @@ namespace Services.Auth.Application.UseCases;
 internal sealed class SigninCommandHandler
     : ICommandHandler<SigninCommand, SigninResponse>
 {
+    private readonly ICredentialRepository _credentialRepository;
     private readonly IHashingService _hashService;
-    private readonly IMailService _emailService;
 
+    private readonly TokenProvider _tokenProvider;
     private readonly JwtSettings _jwtSettings;
     private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
     private readonly EntitiesEventsManagementProvider _entitiesEventsManagement;
 
     public SigninCommandHandler(
+        ICredentialRepository credentialRepository,
         IHashingService hashService,
-        IMailService emailService,
 
+        TokenProvider tokenProvider,
         IOptions<JwtSettings> jwtSettings,
         JwtSecurityTokenHandler jwtSecurityTokenHandler,
         EntitiesEventsManagementProvider entitiesEventsManagement)
     {
+        ArgumentNullException.ThrowIfNull(credentialRepository, nameof(credentialRepository));
         ArgumentNullException.ThrowIfNull(hashService, nameof(hashService));
-        ArgumentNullException.ThrowIfNull(emailService, nameof(emailService));
 
+        ArgumentNullException.ThrowIfNull(tokenProvider, nameof(tokenProvider));
         ArgumentNullException.ThrowIfNull(jwtSettings, nameof(jwtSettings));
         ArgumentNullException.ThrowIfNull(jwtSecurityTokenHandler, nameof(jwtSecurityTokenHandler));
         ArgumentNullException.ThrowIfNull(entitiesEventsManagement, nameof(entitiesEventsManagement));
 
+        _credentialRepository = credentialRepository;
         _hashService = hashService;
-        _emailService = emailService;
 
+        _tokenProvider = tokenProvider;
         _jwtSettings = jwtSettings.Value;
         _jwtSecurityTokenHandler = jwtSecurityTokenHandler;
         _entitiesEventsManagement = entitiesEventsManagement;
@@ -53,14 +57,17 @@ internal sealed class SigninCommandHandler
         if (requestEmailResult.IsFailure)
             return Result.Failure<SigninResponse>(requestEmailResult.Error);
 
-        Result<Credential> found = await _unitOfWork.Credential.ByEmailAsync(requestEmailResult.Value, cancellationToken: cancellationToken);
+        Result<Credential> found = await _credentialRepository.ByEmailAsync(requestEmailResult.Value, cancellationToken: cancellationToken);
         if (found.IsFailure)
             return Result.Failure<SigninResponse>(found.Error);
 
-        Result<string> token = found.Value.BuildJwt(in _jwtSettings, in _jwtSecurityTokenHandler);
+        Result<string> token = _tokenProvider.BuildJwt(
+            found.Value, 
+            in _jwtSettings, 
+            in _jwtSecurityTokenHandler);
         if (token.IsFailure)
             return Result.Failure<SigninResponse>(token.Error);
 
-        return new SigninResponse(token.Value, CredentialResponse.MapFromEntity(found.Value));
+        return new SigninResponse(token.Value, CredentialResponse.Map(found.Value));
     }
 }

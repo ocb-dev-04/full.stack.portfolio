@@ -1,6 +1,5 @@
-using Carter;
 using Services.Auth.Api.Extensions;
-using Services.Auth.Api.Middlewares;
+using Shared.Global.Sources.Middlewares;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -23,9 +22,8 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseMiddleware<GlobalExceptionHandler>();
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
-//app.MapControllers();
-app.MapCarter();
+app.MapControllers();
 
 app.Run();

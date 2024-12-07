@@ -46,10 +46,7 @@ internal sealed class CredentialRepository
 
     /// <inheritdoc/>
     public async Task CreateAsync(Credential model, CancellationToken cancellationToken)
-    {
-        await _table.AddAsync(model, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
-    }
+        => await _table.AddAsync(model, cancellationToken);
 
     /// <inheritdoc/>
     public async Task<Result> DeleteAsync(CredentialId id, CancellationToken cancellationToken = default)
@@ -59,8 +56,17 @@ internal sealed class CredentialRepository
             return Result.Failure(CredentialErrors.NotFound);
 
         _table.Remove(found);
-        await _dbContext.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }
+
+    /// <inheritdoc/>
+    public async Task CommitAsync(CancellationToken cancellationToken)
+    {
+        if (_dbContext.ChangeTracker.HasChanges())
+            await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public void Dispose()
+        => _dbContext.Dispose();
 }

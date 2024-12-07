@@ -2,7 +2,7 @@
 using FluentValidation;
 using CQRS.MediatR.Helper.ErrorHandler;
 
-namespace Services.Auth.Presentation.Behaviors;
+namespace Shared.Global.Sources.Behaviors;
 
 public sealed class ValidationPipelineBehavior<TRequest,TResponse>
     : IPipelineBehavior<TRequest, TResponse>

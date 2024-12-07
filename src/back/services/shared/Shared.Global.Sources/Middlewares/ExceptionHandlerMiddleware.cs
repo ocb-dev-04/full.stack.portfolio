@@ -2,16 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 using CQRS.MediatR.Helper.Exceptions;
-using Shared.Common.Helper.Providers;
-using Shared.Common.Helper.ErrorsHandler;
+using Shared.Global.Sources.Exceptions;
 
-using Tickets.Shared.Domain.Exceptions;
-using Tickets.Shared.Domain.Internal.ErrorLogs;
-
-namespace Tickets.Presentation.Middlewares;
+namespace Shared.Global.Sources.Middlewares;
 
 public sealed class ExceptionHandlerMiddleware
 {
@@ -85,21 +80,14 @@ public sealed class ExceptionHandlerMiddleware
     {
         _logger.LogError($"--> Some error ocurred: {0}", ex.InnerException);
 
-        IServiceScope scope = context.RequestServices.CreateScope();
-        HttpRequestProvider? httpRequestProvider = scope.ServiceProvider.GetService<HttpRequestProvider>();
-        IErrorLogRepository? errorLogRepository = scope.ServiceProvider.GetService<IErrorLogRepository>();
+        ProblemDetails problemDetails = new()
+        {
+            Status = StatusCodes.Status500InternalServerError,
+            Title = "Server Error",
+            Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1"
+        };
 
-        ArgumentNullException.ThrowIfNull(httpRequestProvider, nameof(httpRequestProvider));
-        ArgumentNullException.ThrowIfNull(errorLogRepository, nameof(errorLogRepository));
-
-        Result<ErrorLog> error = ErrorLog.Create(
-            ex.Message,
-            ex.StackTrace ?? string.Empty,
-            in httpRequestProvider);
-
-        await errorLogRepository.CreateAsync(error.Value, context.RequestAborted);
-
-        context.Response.StatusCode = 500;
-        await context.Response.WriteAsync(string.Empty);
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        await context.Response.WriteAsJsonAsync(problemDetails);
     }
 }

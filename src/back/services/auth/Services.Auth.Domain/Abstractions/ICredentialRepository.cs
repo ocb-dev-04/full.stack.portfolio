@@ -9,7 +9,8 @@ namespace Services.Auth.Domain.Abstractions;
 public interface ICredentialRepository
     : ISingleQueriesGenericRepository<Credential, CredentialId>,
         ICreateGenericRepository<Credential, CredentialId>,
-        IDeleteAsyncGenericRepository<Credential, CredentialId>
+        IDeleteAsyncGenericRepository<Credential, CredentialId>,
+        IDisposable
 {
     /// <summary>
     /// Get <see cref="Credential"/> by <see cref="EmailAddress"/>
@@ -19,4 +20,11 @@ public interface ICredentialRepository
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     Task<Result<Credential>> ByEmailAsync(EmailAddress email, bool tracking = true, CancellationToken cancellationToken = default);
+    
+    /// <summary>
+    /// Save changes
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task CommitAsync(CancellationToken cancellationToken);
 }
