@@ -1,5 +1,5 @@
 ﻿namespace Shared.Message.Queue.Requests.Responses;
 
-internal class PatientResponses
+internal class DoctorQueueResponse
 {
 }

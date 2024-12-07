@@ -4,6 +4,12 @@ using Shared.Global.Sources.Behaviors;
 using System.IdentityModel.Tokens.Jwt;
 using Services.Auth.Application.Providers;
 using Microsoft.Extensions.DependencyInjection;
+using MassTransit;
+using Shared.Message.Queue.Requests.Buses;
+using Services.Auth.Application.Consumers;
+using Shared.Domain.Settings;
+using Microsoft.Extensions.Options;
+using Common.Services;
 
 namespace Services.Auth.Application;
 
@@ -26,6 +32,39 @@ public static class AuthServices
 
             config.AddOpenBehavior(typeof(ValidationPipelineBehavior<,>));
         });
+
+        services.AddMultiBusServices()
+            .AddMessgeQueueServices();
+
+        return services;
+    }
+
+    public static IServiceCollection AddMessgeQueueServices(this IServiceCollection services)
+    {
+        services.AddMassTransit<IGeneralBus>(busRegConfig =>
+            {
+                busRegConfig.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter(prefix: string.Empty, includeNamespace: false));
+
+                busRegConfig.AddConsumer<GetCredentialByIdConsumer, GetCredentialByIdConsumerDefinition>();
+
+                busRegConfig.UsingRabbitMq((ctx, config) =>
+                {
+                    IOptions<MessageQueueSettings>? messageOptions = ctx.GetService<IOptions<MessageQueueSettings>>();
+                    ArgumentNullException.ThrowIfNull(messageOptions, nameof(messageOptions));
+
+                    MessageQueueSettings messageQueueOptions = messageOptions.Value; 
+                    config.Host(new Uri(messageQueueOptions.Url), h =>
+                    {
+                        h.Username(messageQueueOptions.User);
+                        h.Password(messageQueueOptions.Password);
+#if !DEBUG
+            h.UseSsl();
+#endif
+                    });
+
+                    config.ConfigureEndpoints(ctx);
+                });
+            });
 
         return services;
     }
