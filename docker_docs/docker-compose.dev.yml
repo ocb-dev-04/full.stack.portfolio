@@ -33,7 +33,7 @@ services:
       - "6379:6379"
     networks:
       - dev_network
-
+    
   rabbitmq:
     image: rabbitmq:management
     container_name: rabbitmq_dev
@@ -55,6 +55,9 @@ services:
       - "8500:8500" # Consul UI
     networks:
       - dev_network
+    # volumes:
+    #   - ./config/consul.hcl:/consul/config/consul.hcl
+    # command: "agent -server -bootstrap -config-dir=/consul/config"
 
   otel-collector:
     image: otel/opentelemetry-collector:0.95.0

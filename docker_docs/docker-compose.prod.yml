@@ -49,6 +49,9 @@ services:
     networks:
       prod_network:
         ipv4_address: 172.20.0.6
+    # volumes:
+    #   - ./config/consul.hcl:/consul/config/consul.hcl
+    # command: "agent -server -bootstrap -config-dir=/consul/config"
 
   otel-collector:
     image: otel/opentelemetry-collector:0.95.0

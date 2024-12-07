@@ -135,7 +135,7 @@ internal static class Services
                 sp => sp.GetRequiredService<IOptions<RelationalDatabaseSettings>>().Value.ConnectionString,
                 name: "PostgreSQL",
                 tags: new[] { "database", "relational" }
-            )
+            );
             //.AddMongoDb(
             //    sp => sp.GetRequiredService<IOptions<NoRelationalDatabaseSettings>>().Value.ConnectionString,
             //    name: "MongoDB",
@@ -144,11 +144,11 @@ internal static class Services
             //    sp => sp.GetRequiredService<IOptions<CacheDatabaseSettings>>().Value.ConnectionString,
             //    name: "Redis",
             //    tags: new[] { "database", "in memory" })
-            .AddRabbitMQ(
-                services.BuildServiceProvider().GetRequiredService<IOptions<MessageQueueSettings>>().Value.Url,
-                name: "RabbitMQ",
-                tags: new[] { "queue", "messaging" }
-            );
+            //.AddRabbitMQ(
+            //    services.BuildServiceProvider().GetRequiredService<IOptions<MessageQueueSettings>>().Value.Url,
+            //    name: "RabbitMQ",
+            //    tags: new[] { "queue", "messaging" }
+            //);
 
         return services;
     }
