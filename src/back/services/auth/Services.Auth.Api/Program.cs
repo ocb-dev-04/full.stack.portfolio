@@ -1,20 +1,19 @@
+using Services.Auth.Persistence;
 using Services.Auth.Api.Extensions;
 using Shared.Global.Sources.Middlewares;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-
 builder.AddServices();
 
 WebApplication app = builder.Build();
-
-//app.UseCustomHealthChecks();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.CheckMigrations();
 }
 
+app.UseCustomHealthChecks();
 app.UseResponseCompression();
 
 app.UseRouting();

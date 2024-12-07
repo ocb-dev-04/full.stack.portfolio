@@ -59,9 +59,9 @@ internal static class Services
             .AddHashingServices();
 
         services.AddJWt()
-            .AddCustomSwagger();
-            //.AddHealthCheck()
-            //.AddTelemetries(configuration);
+            .AddCustomSwagger()
+            .AddHealthCheck()
+            .AddTelemetries(configuration);
     }
 
     private static IServiceCollection AddJWt(this IServiceCollection services)
