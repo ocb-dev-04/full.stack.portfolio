@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Services.Auth.Persistence;
 
-public static class Services
+public static class PersistenceServices
 {
     public static IServiceCollection AddPersistenceServices(this IServiceCollection services)
     {

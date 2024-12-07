@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Tickets.Presentation.Controllers.Base;
 
 using Shared.Common.Helper.Extensions;
@@ -53,8 +53,6 @@ public sealed class AuthController : BaseController
     #endregion
 
     #region Commands
-
-    #region Access
 
     /// <summary>
     /// Signup with credentials
@@ -114,7 +112,6 @@ public sealed class AuthController : BaseController
         return response.Match(Ok, HandleErrorResults);
     }
 
-    #endregion
 
     #endregion
 }

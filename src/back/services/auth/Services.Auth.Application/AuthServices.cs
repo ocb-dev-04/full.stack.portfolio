@@ -6,19 +6,18 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Services.Auth.Application;
 
-public static class Services
+public static class AuthServices
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        services.AddControllers();
-        services.AddTransient<TokenProvider>();
+        services.AddScoped<TokenProvider>();
         services.AddSingleton<JwtSecurityTokenHandler>();
 
         services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
 
         services.AddMediatR(config =>
         {
-            config.RegisterServicesFromAssembly(typeof(Services).Assembly);
+            config.RegisterServicesFromAssembly(typeof(AuthServices).Assembly);
 
             config.AddOpenBehavior(typeof(ValidationPipelineBehavior<,>));
         });

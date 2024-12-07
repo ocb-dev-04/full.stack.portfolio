@@ -1,4 +1,5 @@
 ﻿using Shared.Domain.Settings;
+using Services.Auth.Presentation;
 using Services.Auth.Persistence;
 using Services.Auth.Application;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -10,6 +11,8 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Services.Auth.Application.Settings;
+using Shared.Common.Helper;
+using Common.Services;
 
 namespace Services.Auth.Api.Extensions;
 
@@ -49,7 +52,11 @@ internal static class Services
             .ValidateOnStart();
 
         services.AddPersistenceServices()
-            .AddApplicationServices();
+            .AddApplicationServices()
+            .AddPresentationServices();
+
+        services.AddSharedCommonProviders()
+            .AddHashingServices();
 
         services.AddJWt()
             .AddCustomSwagger();
@@ -156,7 +163,7 @@ internal static class Services
 
         services.AddOpenTelemetry()
             .WithMetrics(opt =>
-                opt.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Services.Auth.Api"))
+                opt.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("AuthServices.Auth.Api"))
                    .AddMeter("Service_Auth_OpenRemoteManage")
                    .AddAspNetCoreInstrumentation()
                    .AddRuntimeInstrumentation()
@@ -165,7 +172,7 @@ internal static class Services
                    .AddOtlpExporter(otlpAction)
             )
             .WithTracing(opt =>
-                opt.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("Services.Auth.Api"))
+                opt.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("AuthServices.Auth.Api"))
                    .AddAspNetCoreInstrumentation()
                    .AddEntityFrameworkCoreInstrumentation()
                    .AddHttpClientInstrumentation()

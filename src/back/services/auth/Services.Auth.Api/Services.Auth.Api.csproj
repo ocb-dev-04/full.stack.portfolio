@@ -30,6 +30,7 @@
 		<ProjectReference Include="..\Services.Auth.Application\Services.Auth.Application.csproj" />
 		<ProjectReference Include="..\Services.Auth.Domain\Services.Auth.Domain.csproj" />
 		<ProjectReference Include="..\Services.Auth.Persistence\Services.Auth.Persistence.csproj" />
+		<ProjectReference Include="..\Services.Auth.Presentation\Services.Auth.Presentation.csproj" />
 	</ItemGroup>
 
 </Project>
