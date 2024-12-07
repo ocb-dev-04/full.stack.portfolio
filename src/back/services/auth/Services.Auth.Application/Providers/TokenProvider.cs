@@ -18,9 +18,6 @@ internal sealed class TokenProvider
     private static readonly Error _authoritationHeaderNotFound
         = Error.NotFound("authoritationHeaderNotFound", "The jwt was not found");
 
-    private static readonly Error _invalidToken
-        = Error.NotFound("invalidToken", "The jwt is invalid");
-
     private static readonly string _headerAuthKey = "Authorization";
     private static readonly string _securityAlgorithm = SecurityAlgorithms.HmacSha256Signature;
 
@@ -54,7 +51,7 @@ internal sealed class TokenProvider
         return jwtSecurityTokenHandler.WriteToken(tokenDescriptor);
     }
 
-    internal Result<CurrentRequestUser> ReadJwt(
+    internal Result<Guid> ReadJwt(
         in JwtSettings jwtSettings,
         in JwtSecurityTokenHandler jwtSecurityTokenHandler,
         in HttpRequestProvider httpRequestProvider)
@@ -62,26 +59,25 @@ internal sealed class TokenProvider
         HttpContext httpContext = httpRequestProvider.GetCurrentHttpContext()!;
         bool getToken = httpContext.Request.Headers.TryGetValue(_headerAuthKey, out StringValues jwt);
         if (!getToken)
-            return Result.Failure<CurrentRequestUser>(_authoritationHeaderNotFound);
+            return Result.Failure<Guid>(_authoritationHeaderNotFound);
 
         string token = jwt.ToString().Substring("Bearer ".Length).Trim();
         if (!jwtSecurityTokenHandler.CanReadToken(token))
-            return Result.Failure<CurrentRequestUser>(_invalidToken);
+            return Result.Failure<Guid>(Error.Unauthorized());
 
         JwtSecurityToken jwtToken = jwtSecurityTokenHandler.ReadJwtToken(token);
 
         TokenValidationParameters validationParameters = ValidationParameters(jwtSettings);
         ClaimsPrincipal principal = jwtSecurityTokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
         if (validatedToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(_securityAlgorithm, StringComparison.InvariantCultureIgnoreCase))
-            return Result.Failure<CurrentRequestUser>(_invalidToken);
+            return Result.Failure<Guid>(Error.Unauthorized());
 
         IEnumerable<Claim> claims = principal.Claims;
         string email = claims.FirstOrDefault((Claim s) => s.Type.Equals(ClaimTypes.Email))!.Value;
         string credentialId = claims.FirstOrDefault((Claim s) => s.Type.Equals(ClaimTypes.Sid))!.Value;
-        string languageCode = claims.FirstOrDefault((Claim s) => s.Type.Equals(ClaimTypes.Country))!.Value;
         string privateKey = claims.FirstOrDefault((Claim s) => s.Type.Equals(ClaimTypes.Hash))!.Value;
 
-        return new CurrentRequestUser(Guid.Parse(credentialId), email, languageCode, privateKey);
+        return Guid.Parse(credentialId);
     }
 
     private static TokenValidationParameters ValidationParameters(JwtSettings jwtSettings)

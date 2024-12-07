@@ -1,5 +1,5 @@
 echo Creating migration...
-dotnet ef migrations add v_1_0_0_AppDbContext_Migration --context AppDbContext --startup-project ../../src/back/services/auth/Services.Auth.Api --project ../../src/back/services/auth/Services.Auth.Persistence -o Migrations
+dotnet ef migrations add Auth_Migration --context AppDbContext --startup-project ../../src/back/services/auth/Services.Auth.Api --project ../../src/back/services/auth/Services.Auth.Persistence -o Migrations
 
 echo Updating database...
 dotnet ef database update --context AppDbContext --startup-project ../../src/back/services/auth/Services.Auth.Api --project ../../src/back/services/auth/Services.Auth.Persistence

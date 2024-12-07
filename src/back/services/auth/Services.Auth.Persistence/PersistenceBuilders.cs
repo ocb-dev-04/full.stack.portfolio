@@ -18,6 +18,10 @@ public static class PersistenceBuilders
         using AppDbContext? context = scope.ServiceProvider.GetService<AppDbContext>();
         ArgumentNullException.ThrowIfNull(context, nameof(context));
 
+        bool canConnect = context.Database.CanConnect();
+        if (!canConnect) 
+            throw new Exception("Can't connect to database");
+
         IEnumerable<string> pendingMigrations = context.Database.GetPendingMigrations();
         if (pendingMigrations.Any())
             context.Database.Migrate();

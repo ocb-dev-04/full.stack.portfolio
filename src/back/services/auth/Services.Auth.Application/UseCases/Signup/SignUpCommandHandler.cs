@@ -64,6 +64,7 @@ internal sealed class SignUpCommandHandler
             in _hashService);
         
         await _credentialRepository.CreateAsync(credential, cancellationToken);
+        await _credentialRepository.CommitAsync(cancellationToken);
 
         Result<string> token = _tokenProvider.BuildJwt(credential, in _jwtSettings, in _jwtSecurityTokenHandler);
         if (token.IsFailure)

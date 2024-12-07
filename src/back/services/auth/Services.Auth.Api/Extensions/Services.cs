@@ -153,7 +153,7 @@ internal static class Services
 
     private static IServiceCollection AddTelemetries(this IServiceCollection services, IConfiguration configuration)
     {
-        string? otlpEndpointEnv = configuration["OTEL_EXPORTER_OTLP_ENDPOINT"];
+        string? otlpEndpointEnv = configuration.GetValue<string>("OTEL_EXPORTER_OTLP_ENDPOINT");
         ArgumentNullException.ThrowIfNullOrEmpty(otlpEndpointEnv);
 
         Uri otlpEndpoint = new Uri(otlpEndpointEnv);

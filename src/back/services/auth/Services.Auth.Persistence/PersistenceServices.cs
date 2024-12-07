@@ -24,7 +24,7 @@ public static class PersistenceServices
                 serverOptions.EnableRetryOnFailure(databaseOptions.MaxRetryCount);
                 serverOptions.CommandTimeout(databaseOptions.CommandTimeout);
                 serverOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-                serverOptions.MigrationsHistoryTable("_GeneralDbContext_MigrationsHistory", schema: "migrations");
+                serverOptions.MigrationsHistoryTable("_Auth_MigrationsHistory", schema: "migrations");
             });
 #if DEBUG
             optionsBuilder.EnableDetailedErrors(true);

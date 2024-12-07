@@ -45,6 +45,7 @@ public sealed class AuthController : BaseController
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
+    [Authorize]
     [HttpGet("check-access")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCredentialByToken(CancellationToken cancellationToken)

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Services.Auth.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class v_1_0_0_AppDbContext_Migration : Migration
+    public partial class Auth_Migration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

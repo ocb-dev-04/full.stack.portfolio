@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using Shared.Global.Sources.Behaviors;
 using System.IdentityModel.Tokens.Jwt;
 using Services.Auth.Application.Providers;
@@ -14,6 +15,10 @@ public static class AuthServices
         services.AddSingleton<JwtSecurityTokenHandler>();
 
         services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
+        
+        services.AddValidatorsFromAssembly(
+            typeof(AuthServices).Assembly, 
+            includeInternalTypes: true);
 
         services.AddMediatR(config =>
         {
@@ -21,6 +26,7 @@ public static class AuthServices
 
             config.AddOpenBehavior(typeof(ValidationPipelineBehavior<,>));
         });
+
         return services;
     }
 }

@@ -13,8 +13,8 @@ using Services.Auth.Persistence.Context;
 namespace Services.Auth.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241207050725_v_1_0_0_AppDbContext_Migration")]
-    partial class v_1_0_0_AppDbContext_Migration
+    [Migration("20241207062144_Auth_Migration")]
+    partial class Auth_Migration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

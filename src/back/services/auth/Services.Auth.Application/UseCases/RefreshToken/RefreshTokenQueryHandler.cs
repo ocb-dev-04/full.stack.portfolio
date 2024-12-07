@@ -22,9 +22,6 @@ internal sealed class RefreshTokenQueryHandler
     private readonly HttpRequestProvider _httpRequestProvider;
     private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
 
-    private readonly static Error _unauthError
-        = Error.NotFound("unauthError", "A valid token is required");
-
     public RefreshTokenQueryHandler(
         ICredentialRepository credentialRepository,
         IOptions<JwtSettings> jwtSettings,
@@ -48,14 +45,14 @@ internal sealed class RefreshTokenQueryHandler
 
     public async Task<Result<RefreshTokenResponse>> Handle(RefreshTokenQuery request, CancellationToken cancellationToken)
     {
-        Result<CurrentRequestUser> currentRequestUser = _tokenProvider.ReadJwt(
+        Result<Guid> credentialIdFromToken = _tokenProvider.ReadJwt(
             in _jwtSettings,
             in _jwtSecurityTokenHandler,
             in _httpRequestProvider);
-        if (currentRequestUser.IsFailure)
-            return Result.Failure<RefreshTokenResponse>(_unauthError);
+        if (credentialIdFromToken.IsFailure)
+            return Result.Failure<RefreshTokenResponse>(Error.Unauthorized());
 
-        Result<CredentialId> credentialId = CredentialId.Create(currentRequestUser.Value.CredentialId);
+        Result<CredentialId> credentialId = CredentialId.Create(credentialIdFromToken.Value);
         if (credentialId.IsFailure)
             return Result.Failure<RefreshTokenResponse>(credentialId.Error);
 
