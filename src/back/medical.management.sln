@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Message.Queue.Reques
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Domain", "services\shared\Shared.Domain\Shared.Domain.csproj", "{3EBF4DE8-68CF-4F9F-A22B-8E4BCDF6C8E4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Auth.Presentation", "services\auth\Services.Auth.Presentation\Services.Auth.Presentation.csproj", "{7664C1C6-5CB1-4AFA-BD6D-B2964527E2F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +139,10 @@ Global
 		{3EBF4DE8-68CF-4F9F-A22B-8E4BCDF6C8E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EBF4DE8-68CF-4F9F-A22B-8E4BCDF6C8E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EBF4DE8-68CF-4F9F-A22B-8E4BCDF6C8E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7664C1C6-5CB1-4AFA-BD6D-B2964527E2F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7664C1C6-5CB1-4AFA-BD6D-B2964527E2F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7664C1C6-5CB1-4AFA-BD6D-B2964527E2F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7664C1C6-5CB1-4AFA-BD6D-B2964527E2F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -166,5 +172,6 @@ Global
 		{574E268A-B89D-46A2-A8E0-B911BC38879A} = {62B14A0F-1CF5-4E48-8CBF-B9E3A299FFE9}
 		{A0801937-7DFC-473C-B87F-E4282BDF6B16} = {574E268A-B89D-46A2-A8E0-B911BC38879A}
 		{3EBF4DE8-68CF-4F9F-A22B-8E4BCDF6C8E4} = {574E268A-B89D-46A2-A8E0-B911BC38879A}
+		{7664C1C6-5CB1-4AFA-BD6D-B2964527E2F3} = {FFA3A586-DBD3-4B66-9CA2-CE95FA62DEDD}
 	EndGlobalSection
 EndGlobal

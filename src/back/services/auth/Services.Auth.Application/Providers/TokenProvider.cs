@@ -9,6 +9,7 @@ using Shared.Common.Helper.ErrorsHandler;
 using Services.Auth.Domain.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
+using Services.Auth.Application.Settings;
 
 namespace Services.Auth.Application.Providers;
 
@@ -20,6 +21,7 @@ internal sealed class TokenProvider
     private static readonly Error _invalidToken
         = Error.NotFound("invalidToken", "The jwt is invalid");
 
+    private static readonly string _headerAuthKey = "Authorization";
     private static readonly string _securityAlgorithm = SecurityAlgorithms.HmacSha256Signature;
 
     internal Result<string> BuildJwt(
@@ -58,7 +60,7 @@ internal sealed class TokenProvider
         in HttpRequestProvider httpRequestProvider)
     {
         HttpContext httpContext = httpRequestProvider.GetCurrentHttpContext()!;
-        bool getToken = httpContext.Request.Headers.TryGetValue("Authorization", out StringValues jwt);
+        bool getToken = httpContext.Request.Headers.TryGetValue(_headerAuthKey, out StringValues jwt);
         if (!getToken)
             return Result.Failure<CurrentRequestUser>(_authoritationHeaderNotFound);
 

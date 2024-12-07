@@ -2,7 +2,6 @@
 using Services.Auth.Persistence;
 using Services.Auth.Application;
 using Microsoft.AspNetCore.ResponseCompression;
-using Services.Auth.Api.Settings;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -10,6 +9,7 @@ using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Services.Auth.Application.Settings;
 
 namespace Services.Auth.Api.Extensions;
 
@@ -19,9 +19,6 @@ internal static class Services
     {
         IServiceCollection services = builder.Services;
         IConfiguration configuration = builder.Configuration;
-
-        services.AddControllers();
-        services.AddEndpointsApiExplorer();
 
         services.AddResponseCompression(options =>
         {

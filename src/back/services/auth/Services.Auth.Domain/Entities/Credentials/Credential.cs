@@ -23,8 +23,7 @@ public sealed partial class Credential
 
     private Credential(
         EmailAddress email,
-        StringObject passwordHash,
-        LanguageCode languageCode)
+        StringObject passwordHash)
     {
         Id = CredentialId.New();
         IdAsGuid = GuidObject.Create(Id.Value.ToString());

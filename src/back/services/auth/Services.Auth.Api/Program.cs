@@ -1,4 +1,4 @@
-using FastEndpoints;
+using Carter;
 using Services.Auth.Api.Extensions;
 using Services.Auth.Api.Middlewares;
 
@@ -25,6 +25,7 @@ app.UseAuthorization();
 
 app.UseMiddleware<GlobalExceptionHandler>();
 
-app.UseFastEndpoints();
+//app.MapControllers();
+app.MapCarter();
 
 app.Run();

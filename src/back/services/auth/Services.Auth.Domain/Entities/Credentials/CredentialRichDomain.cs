@@ -11,20 +11,14 @@ public sealed partial class Credential
     /// </summary>
     /// <param name="email"></param>
     /// <param name="passwordHash"></param>
-    /// <param name="languageCode"></param>
     /// <param name="hashingService"></param>
     /// <returns></returns>
     public static Credential Create(
         EmailAddress email,
         StringObject passwordHash,
-        LanguageCode languageCode,
         in IHashingService hashingService)
     {
-        Credential created = new(
-            email,
-            passwordHash,
-            languageCode);
-
+        Credential created = new(email, passwordHash);
         created.SetPrivateKey(hashingService);
 
         return created;
