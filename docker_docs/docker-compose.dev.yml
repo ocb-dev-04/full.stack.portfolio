@@ -35,7 +35,7 @@ services:
       - dev_network
     
   rabbitmq:
-    image: rabbitmq:management
+    image: rabbitmq:3.12-management
     container_name: rabbitmq_dev
     environment:
       RABBITMQ_DEFAULT_USER: root

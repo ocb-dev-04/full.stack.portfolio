@@ -24,6 +24,11 @@ internal static class Services
         IServiceCollection services = builder.Services;
         IConfiguration configuration = builder.Configuration;
 
+        builder.Configuration
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: false, reloadOnChange: true)
+            .AddEnvironmentVariables();
+
         services.AddResponseCompression(options =>
         {
             options.Providers.Add<GzipCompressionProvider>();

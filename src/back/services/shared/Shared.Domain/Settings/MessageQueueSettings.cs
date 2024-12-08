@@ -2,7 +2,7 @@
 
 namespace Shared.Domain.Settings;
 
-public sealed class MessageQueueSettings
+public sealed class MessageQueueSettings : BaseSettings
 {
     [Required]
     public string Url { get; set; }
