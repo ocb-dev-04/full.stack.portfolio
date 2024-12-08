@@ -1,5 +1,4 @@
-﻿using Doctor.Management.Gateway.Abstractions;
-using Yarp.ReverseProxy.Configuration;
+﻿using Yarp.ReverseProxy.Configuration;
 
 using AgentService = Consul.AgentService;
 using IConsulClient = Consul.IConsulClient;

@@ -6,13 +6,20 @@ public static class Builders
 {
     public static async Task AddDynamicRoutes(this WebApplication app)
     {
-        ConsulProxyConfigProvider provider = app.Services.GetRequiredService<ConsulProxyConfigProvider>();
-        
-        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-        cancellationTokenSource.CancelAfter(TimeSpan.FromMinutes(1));
-        
-        // let services start and configure information into consul services
-        await Task.Delay(20 * 1000);
-        await provider.UpdateRoutesAsync(cancellationTokenSource.Token);
+		try
+		{
+            ConsulProxyConfigProvider provider = app.Services.GetRequiredService<ConsulProxyConfigProvider>();
+
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            cancellationTokenSource.CancelAfter(TimeSpan.FromMinutes(1));
+
+            // let services start and configure information into consul services
+            await Task.Delay(20 * 1000);
+            await provider.UpdateRoutesAsync(cancellationTokenSource.Token);
+        }
+		catch (Exception ex)
+		{
+            app.Logger.LogError("Some error ocurred: {0}", ex.Message);
+		}
     }
 }
