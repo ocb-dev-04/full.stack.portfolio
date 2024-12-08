@@ -7,7 +7,7 @@ namespace Doctor.Management.Gateway.ProxyConfig;
 
 public sealed class ConsulProxyConfigProvider : IProxyConfigProvider
 {
-    private readonly IConsulClient _consulClient;
+    private readonly IConsulClient _consulClient; 
     private readonly InMemoryProxyConfig _config;
     private readonly ILogger<ConsulProxyConfigProvider> _logger;
 
