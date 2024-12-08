@@ -8,9 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Consul" Version="1.7.14.6" />
-    <PackageReference Include="Quartz" Version="3.13.1" />
-    <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.13.1" />
-    <PackageReference Include="Quartz.Extensions.Hosting" Version="3.13.1" />
+    <PackageReference Include="Microsoft.Extensions.ServiceDiscovery.Yarp" Version="8.2.2" />
     <PackageReference Include="Yarp.ReverseProxy" Version="2.2.0" />
   </ItemGroup>
 

@@ -6,6 +6,8 @@ builder.AddServices();
 
 WebApplication app = builder.Build();
 
+//await app.AddDynamicRoutes();
+
 app.MapReverseProxy();
 
 app.Run();

@@ -1,10 +1,8 @@
 ﻿using Consul;
-using Quartz;
 using Microsoft.Extensions.Options;
-using Yarp.ReverseProxy.Configuration;
 using Doctor.Management.Gateway.Settings;
 using Doctor.Management.Gateway.ProxyConfig;
-using Doctor.Management.Gateway.JobsConfiguration;
+using Yarp.ReverseProxy.Configuration;
 
 namespace Doctor.Management.Gateway.Extensions;
 
@@ -19,7 +17,8 @@ public static class Services
 
         builder.Services
             .AddConsulAsService()
-            .AddUpdateRoutesJob()
+            .AddServiceDiscovery()
+            .AddHttpForwarderWithServiceDiscovery()
             .AddReverseProxy();
     }
 
@@ -40,19 +39,9 @@ public static class Services
         }));
 
         services.AddSingleton<IProxyConfigProvider, ConsulProxyConfigProvider>();
+        //services.AddSingleton<ConsulProxyConfigProvider>();
 
         return services;
     }
 
-    private static IServiceCollection AddUpdateRoutesJob(this IServiceCollection services)
-    {
-        //services.AddQuartz(options 
-        //    => options.UseMicrosoftDependencyInjectionJobFactory());
-        services.AddQuartzHostedService(options 
-            => options.WaitForJobsToComplete = true);
-
-        services.ConfigureOptions<UpdateRoutesJobConfiguration>();
-
-        return services;
-    }
 }

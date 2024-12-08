@@ -9,7 +9,9 @@ public class InMemoryProxyConfig
     private readonly List<RouteConfig> _routes;
     private readonly List<ClusterConfig> _clusters;
 
-    public InMemoryProxyConfig(IEnumerable<RouteConfig> routes, IEnumerable<ClusterConfig> clusters)
+    public InMemoryProxyConfig(
+        IEnumerable<RouteConfig> routes, 
+        IEnumerable<ClusterConfig> clusters)
     {
         _routes = routes.ToList();
         _clusters = clusters.ToList();
