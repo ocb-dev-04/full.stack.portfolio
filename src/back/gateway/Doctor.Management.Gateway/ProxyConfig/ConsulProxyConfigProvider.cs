@@ -1,4 +1,5 @@
-﻿using Yarp.ReverseProxy.Configuration;
+﻿using Doctor.Management.Gateway.Abstractions;
+using Yarp.ReverseProxy.Configuration;
 
 using AgentService = Consul.AgentService;
 using IConsulClient = Consul.IConsulClient;
@@ -12,20 +13,23 @@ public sealed class ConsulProxyConfigProvider : IProxyConfigProvider
     private readonly ILogger<ConsulProxyConfigProvider> _logger;
 
     public ConsulProxyConfigProvider(
-        IConsulClient consulClient, 
+        IConsulClient consulClient,
+        InMemoryProxyConfig config,
         ILogger<ConsulProxyConfigProvider> logger)
     {
         ArgumentNullException.ThrowIfNull(consulClient, nameof(consulClient));
+        ArgumentNullException.ThrowIfNull(config, nameof(config));
         ArgumentNullException.ThrowIfNull(logger, nameof(logger));
 
         _consulClient = consulClient;
-        _config = new InMemoryProxyConfig(new List<RouteConfig>(), new List<ClusterConfig>());
+        _config = config;
         _logger = logger;
     }
 
-    public IProxyConfig GetConfig() => _config;
+    public IProxyConfig GetConfig()
+        => _config;
 
-    public async Task UpdateRoutesAsync(CancellationToken cancellationToken)
+    public async Task UpdateRoutesAsync(CancellationToken cancellationToken = default)
     {
         Consul.QueryResult<Dictionary<string, AgentService>>? services = await _consulClient.Agent.Services(cancellationToken);
         List<RouteConfig> routes = services.Response.Select(s =>

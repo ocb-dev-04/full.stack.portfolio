@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Doctor.Management.Gateway.Settings;
 using Doctor.Management.Gateway.ProxyConfig;
 using Yarp.ReverseProxy.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Doctor.Management.Gateway.Extensions;
 
@@ -17,8 +18,6 @@ public static class Services
 
         builder.Services
             .AddConsulAsService()
-            .AddServiceDiscovery()
-            .AddHttpForwarderWithServiceDiscovery()
             .AddReverseProxy();
     }
 
@@ -38,10 +37,10 @@ public static class Services
             config.Token = settings.Value.Token;
         }));
 
+        services.AddSingleton<InMemoryProxyConfig>();
+        services.AddSingleton<ConsulProxyConfigProvider>();
         services.AddSingleton<IProxyConfigProvider, ConsulProxyConfigProvider>();
-        //services.AddSingleton<ConsulProxyConfigProvider>();
 
         return services;
     }
-
 }
