@@ -46,7 +46,8 @@ public static class Services
 
     private static IServiceCollection AddUpdateRoutesJob(this IServiceCollection services)
     {
-        services.AddQuartz(options => options.UseMicrosoftDependencyInjectionJobFactory());
+        //services.AddQuartz(options 
+        //    => options.UseMicrosoftDependencyInjectionJobFactory());
         services.AddQuartzHostedService(options 
             => options.WaitForJobsToComplete = true);
 
