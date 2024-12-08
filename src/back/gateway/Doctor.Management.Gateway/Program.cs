@@ -1,13 +1,10 @@
+using Doctor.Management.Gateway.Extensions;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+builder.AddServices();
 
 WebApplication app = builder.Build();
-
-//app.UseHttpsRedirection();
-
-//app.UseAuthorization();
 
 app.MapReverseProxy();
 
