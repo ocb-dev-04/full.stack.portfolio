@@ -1,8 +1,10 @@
 ﻿using Consul;
+using Quartz;
 using Microsoft.Extensions.Options;
 using Yarp.ReverseProxy.Configuration;
 using Doctor.Management.Gateway.Settings;
-using Doctor.Management.Gateway.Services;
+using Doctor.Management.Gateway.ProxyConfig;
+using Doctor.Management.Gateway.JobsConfiguration;
 
 namespace Doctor.Management.Gateway.Extensions;
 
@@ -15,10 +17,14 @@ public static class Services
             .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: false, reloadOnChange: true)
             .AddEnvironmentVariables();
 
-        IServiceCollection services = builder.Services;
+        builder.Services
+            .AddConsulAsService()
+            .AddUpdateRoutesJob()
+            .AddReverseProxy();
+    }
 
-        services.AddReverseProxy();//.LoadFromProvider();
-
+    private static IServiceCollection AddConsulAsService(this IServiceCollection services)
+    {
         services.AddOptions<ConsulSettings>()
             .BindConfiguration(nameof(ConsulSettings))
             .ValidateDataAnnotations()
@@ -34,5 +40,18 @@ public static class Services
         }));
 
         services.AddSingleton<IProxyConfigProvider, ConsulProxyConfigProvider>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddUpdateRoutesJob(this IServiceCollection services)
+    {
+        services.AddQuartz(options => options.UseMicrosoftDependencyInjectionJobFactory());
+        services.AddQuartzHostedService(options 
+            => options.WaitForJobsToComplete = true);
+
+        services.ConfigureOptions<UpdateRoutesJobConfiguration>();
+
+        return services;
     }
 }

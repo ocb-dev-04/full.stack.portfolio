@@ -1,11 +1,9 @@
-﻿
-using Yarp.ReverseProxy.Configuration;
-using Doctor.Management.Gateway.ProxyConfig;
+﻿using Yarp.ReverseProxy.Configuration;
 
 using AgentService = Consul.AgentService;
 using IConsulClient = Consul.IConsulClient;
 
-namespace Doctor.Management.Gateway.Services;
+namespace Doctor.Management.Gateway.ProxyConfig;
 
 public sealed class ConsulProxyConfigProvider : IProxyConfigProvider
 {
@@ -20,9 +18,9 @@ public sealed class ConsulProxyConfigProvider : IProxyConfigProvider
 
     public IProxyConfig GetConfig() => _config;
 
-    public async Task UpdateRoutesAsync()
+    public async Task UpdateRoutesAsync(CancellationToken cancellationToken = default)
     {
-        Consul.QueryResult<Dictionary<string, AgentService>>? services = await _consulClient.Agent.Services();
+        Consul.QueryResult<Dictionary<string, AgentService>>? services = await _consulClient.Agent.Services(cancellationToken);
         List<RouteConfig> routes = services.Response.Select(s => new RouteConfig
         {
             RouteId = $"{s.Value.Service}-route",
@@ -37,8 +35,8 @@ public sealed class ConsulProxyConfigProvider : IProxyConfigProvider
             {
                 {
                     $"{s.Value.Service}-destination",
-                    new DestinationConfig 
-                    { 
+                    new DestinationConfig
+                    {
                         Address = new UriBuilder
                         {
                             Scheme = "http",
