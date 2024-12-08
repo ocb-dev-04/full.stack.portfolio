@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Options;
 using Shared.Consul.Configuration.Settings;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading;
+using Microsoft.Extensions.Logging;
 
 namespace Shared.Consul.Configuration;
 
@@ -21,23 +23,21 @@ public static class ConsulBuilders
     {
         app.Lifetime.ApplicationStarted.Register(() =>
         {
-            IConsulClient consulClient = app.Services.GetRequiredService<IConsulClient>();
-            
-            AgentServiceRegistration registration = new AgentServiceRegistration
-            {
-                ID = settings.Id,
-                Name = settings.Name,
-                Address = settings.Address,
-                Port = settings.Port,
-                Check = new AgentServiceCheck
-                {
-                    HTTP = settings.ServiceCheck.HealthEndpoint,
-                    Interval = TimeSpan.FromSeconds(settings.ServiceCheck.IntervalToCheckInSeconds),
-                    Timeout = TimeSpan.FromSeconds(settings.ServiceCheck.TimeoutCheckInSeconds)
-                }
-            };
+            CancellationToken cancellationToken = app.Lifetime.ApplicationStopping;
 
-            consulClient.Agent.ServiceRegister(registration).Wait();
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    IConsulClient consulClient = app.Services.GetRequiredService<IConsulClient>();
+                    await consulClient.Agent.ServiceRegister(settings.MapToAgentRegistration(), cancellationToken);
+
+                }
+                catch (Exception)
+                {
+                    app.Logger.LogError("--> Error adding service registration to Consul...");
+                }
+            }, cancellationToken);
         });
     }
 
@@ -45,8 +45,20 @@ public static class ConsulBuilders
     {
         app.Lifetime.ApplicationStopping.Register(() =>
         {
-            IConsulClient consulClient = app.Services.GetRequiredService<IConsulClient>();
-            consulClient.Agent.ServiceDeregister(id).Wait();
+            CancellationToken cancellationToken = app.Lifetime.ApplicationStopping;
+
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    IConsulClient consulClient = app.Services.GetRequiredService<IConsulClient>();
+                    await consulClient.Agent.ServiceDeregister(id, cancellationToken);
+                }
+                catch (Exception)
+                {
+                    app.Logger.LogError("--> Error removing service registration from Consul...");
+                }
+            }, cancellationToken);
         });
     }
 }

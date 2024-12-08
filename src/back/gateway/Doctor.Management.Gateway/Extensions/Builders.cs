@@ -10,11 +10,12 @@ public static class Builders
 		{
             ConsulProxyConfigProvider provider = app.Services.GetRequiredService<ConsulProxyConfigProvider>();
 
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-            cancellationTokenSource.CancelAfter(TimeSpan.FromMinutes(1));
-
-            // let services start and configure information into consul services
+            // We wait about 20 seconds for all services to be up
             await Task.Delay(20 * 1000);
+
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(10));
+
             await provider.UpdateRoutesAsync(cancellationTokenSource.Token);
         }
 		catch (Exception ex)
