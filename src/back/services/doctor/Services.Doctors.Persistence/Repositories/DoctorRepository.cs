@@ -1,13 +1,14 @@
-﻿using Services.Doctors.Domain.Errors;
+﻿using System.Linq.Expressions;
+using Services.Doctors.Domain.Dtos;
 using Microsoft.EntityFrameworkCore;
+using Services.Doctors.Domain.Errors;
+using Shared.Common.Helper.Extensions;
 using Services.Doctors.Domain.Entities;
 using Services.Doctors.Domain.StrongIds;
+using Shared.Common.Helper.ErrorsHandler;
 using Services.Doctors.Domain.Abstractions;
 using Services.Doctors.Persistence.Context;
-using Shared.Common.Helper.ErrorsHandler;
 using Value.Objects.Helper.Values.Primitives;
-using System.Linq.Expressions;
-using Shared.Common.Helper.Extensions;
 
 namespace Services.Doctors.Persistence.Repositories;
 
@@ -52,18 +53,30 @@ internal sealed class DoctorRepository
                     .AnyAsync(filter, cancellationToken);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyCollection<Doctor>> CollectionByNameAsync(StringObject name, int pageNumber, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyCollection<DoctorDto>> CollectionByNameAsync(StringObject name, int pageNumber, CancellationToken cancellationToken = default)
         => await _table.AsNoTracking()
                     .Where(w => w.NormalizedName.Contains(name.Value.NormalizeToFTS()))
                     .OrderBy(w => w.NormalizedName)
+                    .Select(s => DoctorDto.Create(
+                        s.Id,
+                        s.Name,
+                        s.Specialty,
+                        s.ExperienceInYears,
+                        s.AuditDates))
                     .Skip((pageNumber - 1) * _pageSize).Take(_pageSize)
                     .ToArrayAsync(cancellationToken);
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyCollection<Doctor>> CollectionBySpecialtyAsync(StringObject specialty, int pageNumber, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyCollection<DoctorDto>> CollectionBySpecialtyAsync(StringObject specialty, int pageNumber, CancellationToken cancellationToken = default)
         => await _table.AsNoTracking()
                     .Where(w => w.Specialty.Equals(specialty))
                     .OrderBy(w => w.NormalizedName)
+                    .Select(s => DoctorDto.Create(
+                        s.Id,
+                        s.Name,
+                        s.Specialty,
+                        s.ExperienceInYears,
+                        s.AuditDates))
                     .Skip((pageNumber - 1) * _pageSize).Take(_pageSize)
                     .ToArrayAsync(cancellationToken);
 

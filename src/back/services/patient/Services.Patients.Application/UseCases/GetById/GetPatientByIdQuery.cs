@@ -5,7 +5,7 @@ using CQRS.MediatR.Helper.Abstractions.Messaging;
 namespace Services.Patients.Application.UseCases;
 
 public sealed record GetPatientByIdQuery(Guid Id)
-    : IQuery<IEnumerable<PatientResponse>>;
+    : IQuery<PatientResponse>;
 
 internal sealed class GetPatientByIdQueryValidator
     : AbstractValidator<GetPatientByIdQuery>

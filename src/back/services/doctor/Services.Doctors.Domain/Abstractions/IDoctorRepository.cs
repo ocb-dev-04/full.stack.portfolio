@@ -3,6 +3,7 @@ using Services.Doctors.Domain.StrongIds;
 using Value.Objects.Helper.Values.Primitives;
 using Shared.Domain.Abstractions.Repositories;
 using Shared.Common.Helper.ErrorsHandler;
+using Services.Doctors.Domain.Dtos;
 
 namespace Services.Doctors.Domain.Abstractions;
 
@@ -28,7 +29,7 @@ public interface IDoctorRepository
     /// <param name="pageNumber"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<IReadOnlyCollection<Doctor>> CollectionByNameAsync(StringObject name, int pageNumber, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<DoctorDto>> CollectionByNameAsync(StringObject name, int pageNumber, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Get <see cref="Doctor"/> collection by specialty
@@ -37,7 +38,7 @@ public interface IDoctorRepository
     /// <param name="pageNumber"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<IReadOnlyCollection<Doctor>> CollectionBySpecialtyAsync(StringObject specialty, int pageNumber, CancellationToken cancellationToken = default);
+    Task<IReadOnlyCollection<DoctorDto>> CollectionBySpecialtyAsync(StringObject specialty, int pageNumber, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Get specialty collection

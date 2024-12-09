@@ -29,7 +29,7 @@ public sealed class AuthenticationMiddleware
             return;
         }
 
-        bool hasToken = TryGetToken(context, out string? token);
+        bool hasToken = TryGetToken(context, out string token);
         if (!hasToken)
         {
             await RespondWithUnauthorized(context);
@@ -68,10 +68,10 @@ public sealed class AuthenticationMiddleware
         return serviceRequested.Equals(_authServicesIdentifier, StringComparison.OrdinalIgnoreCase);
     }
 
-    private bool TryGetToken(HttpContext context, out string? token)
+    private bool TryGetToken(HttpContext context, out string token)
     {
         bool hasToken = context.Request.Headers.TryGetValue(_authHeaderIdentifier, out var tokenValues);
-        token = hasToken ? tokenValues.ToString() : null;
+        token = hasToken ? tokenValues.ToString() : string.Empty;
         return !string.IsNullOrWhiteSpace(token);
     }
 

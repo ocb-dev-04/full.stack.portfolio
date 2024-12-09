@@ -13,7 +13,6 @@ namespace Services.Patients.Application.UseCases;
 internal sealed class RemovePatientCommandHandler
     : ICommandHandler<RemovePatientCommand>
 {
-
     private readonly IPatientRepository _patientRepository;
     private readonly MessageQeueServices _messageQeueServices;
 
@@ -27,7 +26,6 @@ internal sealed class RemovePatientCommandHandler
         _patientRepository = patientRepository;
         _messageQeueServices = messageQeueServices;
     }
-
 
     public async Task<Result> Handle(RemovePatientCommand request, CancellationToken cancellationToken)
     {

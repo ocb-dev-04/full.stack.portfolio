@@ -1,11 +1,11 @@
-﻿using Shared.Common.Helper.ErrorsHandler;
-using CQRS.MediatR.Helper.Abstractions.Messaging;
+﻿using Services.Patients.Domain.Errors;
+using Services.Patients.Domain.Entities;
+using Shared.Common.Helper.ErrorsHandler;
 using Services.Patients.Domain.Abstractions;
 using Value.Objects.Helper.Values.Primitives;
-using Services.Patients.Domain.Errors;
-using Services.Patients.Domain.Entities;
 using Services.Patients.Application.Services;
 using Shared.Message.Queue.Requests.Responses;
+using CQRS.MediatR.Helper.Abstractions.Messaging;
 
 namespace Services.Patients.Application.UseCases;
 

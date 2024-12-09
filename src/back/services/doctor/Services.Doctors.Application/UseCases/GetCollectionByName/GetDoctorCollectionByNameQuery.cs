@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
 using Shared.Domain.Constants;
+using Services.Doctors.Domain.Dtos;
 using CQRS.MediatR.Helper.Abstractions.Messaging;
 
 namespace Services.Doctors.Application.UseCases;
 
 public sealed record GetDoctorCollectionByNameQuery(string Name, int PageNumber) 
-    : IQuery<IEnumerable<DoctorResponse>>;
+    : IQuery<IEnumerable<DoctorDto>>;
 
 internal sealed class GetDoctorCollectionByNameQueryValidator
     : AbstractValidator<GetDoctorCollectionByNameQuery>

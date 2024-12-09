@@ -1,29 +1,30 @@
-﻿using Shared.Common.Helper.ErrorsHandler;
-using CQRS.MediatR.Helper.Abstractions.Messaging;
-using Services.Doctors.Domain.Abstractions;
-using Services.Doctors.Domain.Entities;
+﻿using Shared.Message.Queue.Requests;
 using Services.Doctors.Domain.Errors;
-using Shared.Common.Helper.Models;
-using Shared.Common.Helper.Providers;
-using Value.Objects.Helper.Values.Primitives;
+using Services.Doctors.Domain.Entities;
 using Services.Doctors.Domain.StrongIds;
+using Shared.Common.Helper.ErrorsHandler;
+using Services.Doctors.Domain.Abstractions;
+using Services.Doctors.Application.Services;
+using Value.Objects.Helper.Values.Primitives;
+using CQRS.MediatR.Helper.Abstractions.Messaging;
 
 namespace Services.Doctors.Application.UseCases;
+
 internal sealed class UpdateDoctorCommandHandler
     : ICommandHandler<UpdateDoctorCommand, DoctorResponse>
 {
     private readonly IDoctorRepository _doctorRepository;
-    private readonly HttpRequestProvider _httpRequestProvider;
+    private readonly MessageQeueServices _messageQeueServices;
 
     public UpdateDoctorCommandHandler(
         IDoctorRepository doctorRepository,
-        HttpRequestProvider httpRequestProvider)
+        MessageQeueServices messageQeueServices)
     {
         ArgumentNullException.ThrowIfNull(doctorRepository, nameof(doctorRepository));
-        ArgumentNullException.ThrowIfNull(httpRequestProvider, nameof(httpRequestProvider));
+        ArgumentNullException.ThrowIfNull(messageQeueServices, nameof(messageQeueServices));
 
         _doctorRepository = doctorRepository;
-        _httpRequestProvider = httpRequestProvider;
+        _messageQeueServices = messageQeueServices;
     }
 
     public async Task<Result<DoctorResponse>> Handle(UpdateDoctorCommand request, CancellationToken cancellationToken)
@@ -36,7 +37,11 @@ internal sealed class UpdateDoctorCommandHandler
         if (found.IsFailure)
             return Result.Failure<DoctorResponse>(found.Error);
 
-        if(!found.Value.CredentialId.Value.Equals(request.CredentialId))
+        Result<CredentialQueueResponse> checkCredential = await _messageQeueServices.GetCredentialByIdAsync(request.CredentialId, cancellationToken);
+        if (checkCredential.IsFailure)
+            return Result.Failure<DoctorResponse>(checkCredential.Error);
+
+        if (!found.Value.CredentialId.Value.Equals(request.CredentialId))
             return Result.Failure<DoctorResponse>(DoctorErrors.YouAreNotTheOwner);
 
         found.Value.UpdateGeneaalData(
