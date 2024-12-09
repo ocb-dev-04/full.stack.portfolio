@@ -1,25 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Services.Doctors.Domain.Entities;
-using Services.Doctors.Domain.StrongIds;
+using Services.Patients.Domain.Entities;
+using Services.Patients.Domain.StrongIds;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Value.Objects.Helper.FluentApiConverters.Primitives;
 
-namespace Services.Doctors.Persistence.FluentConfiguration;
+namespace Services.Patients.Persistence.FluentConfiguration;
 
-internal sealed class DoctorFluentConfiguration
-     : IEntityTypeConfiguration<Doctor>
+internal sealed class PatientFluentConfiguration
+     : IEntityTypeConfiguration<Patient>
 {
-    public void Configure(EntityTypeBuilder<Doctor> builder)
+    public void Configure(EntityTypeBuilder<Patient> builder)
     {
         builder.Property(e => e.Id)
             .IsRequired()
-            .HasConversion<DoctorIdConverter>();
+            .HasConversion<PatientIdConverter>();
 
         builder.Property(e => e.IdAsGuid)
             .IsRequired()
             .HasConversion<GuidObjectConverter>();
         
-        builder.Property(e => e.CredentialId)
+        builder.Property(e => e.DoctorId)
             .IsRequired()
             .HasConversion<GuidObjectConverter>();
 
@@ -28,16 +28,7 @@ internal sealed class DoctorFluentConfiguration
             .HasMaxLength(100)
             .HasConversion<StringObjectConverter>();
 
-        builder.Property(e => e.NormalizedName)
-            .IsRequired()
-            .HasMaxLength(100);
-
-        builder.Property(e => e.Specialty)
-            .IsRequired()
-            .HasMaxLength(50)
-            .HasConversion<StringObjectConverter>();
-
-        builder.Property(e => e.ExperienceInYears)
+        builder.Property(e => e.Age)
             .IsRequired()
             .HasConversion<IntegerObjectConverter>();
 
@@ -56,12 +47,10 @@ internal sealed class DoctorFluentConfiguration
         builder.HasKey(o => o.Id);
         builder.HasIndex(i => new
         {
-            i.CredentialId,
-            i.Name,
-            i.Specialty,
-            i.ExperienceInYears
+            i.DoctorId,
+            i.Name
         });
         
-        builder.Metadata.SetSchema("doctors");
+        builder.Metadata.SetSchema("patients");
     }
 }

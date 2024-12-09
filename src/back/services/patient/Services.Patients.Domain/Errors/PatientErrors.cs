@@ -1,14 +1,14 @@
 ﻿using Shared.Common.Helper.ErrorsHandler;
 
-namespace Services.Doctors.Domain.Errors;
+namespace Services.Patients.Domain.Errors;
 
-public sealed class DoctorErrors
+public sealed class PatientErrors
 {
     public static Error NotFound
-        = Error.NotFound("doctorNotFound", "The doctor was not found");
+        = Error.NotFound("patientNotFound", "The patient was not found");
 
     public static Error NotModified
-        = Error.BadRequest("doctorNotModified", "The doctor was not modified");
+        = Error.BadRequest("patientNotModified", "The patient was not modified");
 
     public static Error AlreadyExist
         = Error.BadRequest("doctorAlreadyExist", "The doctor already exist");

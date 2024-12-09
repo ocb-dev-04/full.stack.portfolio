@@ -16,6 +16,9 @@ public sealed record CreateDoctorCommand(
 internal sealed class CreateDoctorCommandValidator
     : AbstractValidator<CreateDoctorCommand>
 {
+    private readonly static int _maxExperience = 60;
+    private const string _experienceCantBeGreaterThanSixty = "experienceCantBeGreaterThanSixty";
+
     public CreateDoctorCommandValidator()
     {
         RuleFor(x => x.CredentialId)
@@ -48,6 +51,8 @@ internal sealed class CreateDoctorCommandValidator
         .NotEmpty()
             .WithMessage(ValidationConstants.FieldCantBeEmpty)
         .NotNull()
-            .WithMessage(ValidationConstants.RequiredField);
+            .WithMessage(ValidationConstants.RequiredField)
+        .LessThan(_maxExperience)
+            .WithMessage(_experienceCantBeGreaterThanSixty);
     }
 }

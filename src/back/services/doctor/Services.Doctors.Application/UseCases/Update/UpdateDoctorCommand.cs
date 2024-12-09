@@ -17,6 +17,9 @@ public sealed record UpdateDoctorCommand(
 internal sealed class UpdateDoctorCommandValidator
     : AbstractValidator<UpdateDoctorCommand>
 {
+    private readonly static int _maxExperience = 60;
+    private const string _experienceCantBeGreaterThanSixty = "experienceCantBeGreaterThanSixty";
+
     public UpdateDoctorCommandValidator()
     {
         RuleFor(x => x.Id)
@@ -56,6 +59,8 @@ internal sealed class UpdateDoctorCommandValidator
         .NotEmpty()
             .WithMessage(ValidationConstants.FieldCantBeEmpty)
         .NotNull()
-            .WithMessage(ValidationConstants.RequiredField);
+            .WithMessage(ValidationConstants.RequiredField)
+        .LessThan(_maxExperience)
+            .WithMessage(_experienceCantBeGreaterThanSixty);
     }
 }
