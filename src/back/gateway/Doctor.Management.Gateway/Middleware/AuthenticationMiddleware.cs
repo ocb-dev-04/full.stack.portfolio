@@ -21,22 +21,18 @@ public sealed class AuthenticationMiddleware
     public async Task InvokeAsync(HttpContext context)
     {
         HttpRequest request = context.Request;
-        ArgumentNullException.ThrowIfNullOrEmpty(request.Path.Value);
 
-        string serviceRequested = request.Path.Value.Split('/')
-            .Where(w => !string.IsNullOrEmpty(w))
-            .First();
-        if (serviceRequested.Equals(_authServicesIdentifier))
+        bool skip = ShouldSkipValidation(request);
+        if (skip)
         {
             await _next(context);
             return;
         }
 
-        bool hasToken = context.Request.Headers.TryGetValue(_authHeaderIdentifier, out var token);
-        if (!hasToken || string.IsNullOrWhiteSpace(token))
+        bool hasToken = TryGetToken(context, out string? token);
+        if (!hasToken)
         {
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.Response.WriteAsync(string.Empty);
+            await RespondWithUnauthorized(context);
             return;
         }
 
@@ -46,8 +42,7 @@ public sealed class AuthenticationMiddleware
 
             if (!response.IsSuccessStatusCode)
             {
-                context.Response.StatusCode = (int)response.StatusCode;
-                await context.Response.WriteAsync(JsonSerializer.Serialize(response.Content));
+                await RespondWithAuthServiceError(context, response);
                 return;
             }
 
@@ -55,18 +50,55 @@ public sealed class AuthenticationMiddleware
         }
         catch (Exception)
         {
-            ProblemDetails problemDetails = new()
-            {
-                Status = StatusCodes.Status500InternalServerError,
-                Title = "Gateway Error",
-                Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1"
-            };
-            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-            await context.Response.WriteAsJsonAsync(problemDetails);
+            await RespondWithInternalServerError(context);
             return;
         }
 
         await _next(context);
+    }
+
+    private bool ShouldSkipValidation(HttpRequest request)
+    {
+        ArgumentNullException.ThrowIfNullOrEmpty(request.Path.Value);
+
+        string serviceRequested = request.Path.Value?.Split('/')
+            .Where(w => !string.IsNullOrEmpty(w))
+            .FirstOrDefault() ?? string.Empty;
+
+        return serviceRequested.Equals(_authServicesIdentifier, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private bool TryGetToken(HttpContext context, out string? token)
+    {
+        bool hasToken = context.Request.Headers.TryGetValue(_authHeaderIdentifier, out var tokenValues);
+        token = hasToken ? tokenValues.ToString() : null;
+        return !string.IsNullOrWhiteSpace(token);
+    }
+
+    private async Task RespondWithUnauthorized(HttpContext context)
+    {
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        await context.Response.WriteAsync(string.Empty);
+    }
+
+    private async Task RespondWithAuthServiceError(HttpContext context, ApiResponse<AuthResponse> response)
+    {
+        context.Response.StatusCode = (int)response.StatusCode;
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsJsonAsync(response.Content);
+    }
+
+    private async Task RespondWithInternalServerError(HttpContext context)
+    {
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        context.Response.ContentType = "application/json";
+        ProblemDetails problemDetails = new()
+        {
+            Status = StatusCodes.Status500InternalServerError,
+            Title = "Gateway Error",
+            Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1"
+        };
+        await context.Response.WriteAsJsonAsync(problemDetails);
     }
 }
 
