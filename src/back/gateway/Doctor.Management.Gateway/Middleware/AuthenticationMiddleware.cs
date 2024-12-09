@@ -1,8 +1,6 @@
-﻿using Doctor.Management.Gateway.AuthClientServices;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Refit;
+﻿using Refit;
 using System.Text.Json;
+using Doctor.Management.Gateway.AuthClient;
 
 namespace Doctor.Management.Gateway.Middleware;
 
@@ -68,7 +66,6 @@ public sealed class AuthenticationMiddleware
             return;
         }
 
-        // Continuar al siguiente middleware/ruta
         await _next(context);
     }
 }
