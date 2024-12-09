@@ -4,11 +4,14 @@ using CQRS.MediatR.Helper.Abstractions.Messaging;
 
 namespace Services.Doctors.Application.UseCases;
 
-public sealed record CreateDoctorCommand(
-    Guid CredentialId,
+public sealed record CreateDoctorRequest(
     string Name,
     string Specialty,
-    int ExperienceInYears) : ICommand<DoctorResponse>;
+    int ExperienceInYears);
+
+public sealed record CreateDoctorCommand(
+    Guid CredentialId,
+    CreateDoctorRequest Body) : ICommand<DoctorResponse>;
 
 internal sealed class CreateDoctorCommandValidator
     : AbstractValidator<CreateDoctorCommand>
@@ -22,7 +25,7 @@ internal sealed class CreateDoctorCommandValidator
         .NotNull()
             .WithMessage(ValidationConstants.RequiredField);
 
-        RuleFor(x => x.Name)
+        RuleFor(x => x.Body.Name)
             .Cascade(CascadeMode.Continue)
         .NotEmpty()
             .WithMessage(ValidationConstants.FieldCantBeEmpty)
@@ -31,7 +34,7 @@ internal sealed class CreateDoctorCommandValidator
         .MaximumLength(100)
             .WithMessage(ValidationConstants.ShortField);
 
-        RuleFor(x => x.Specialty)
+        RuleFor(x => x.Body.Specialty)
             .Cascade(CascadeMode.Continue)
         .NotEmpty()
             .WithMessage(ValidationConstants.FieldCantBeEmpty)
@@ -40,7 +43,7 @@ internal sealed class CreateDoctorCommandValidator
         .MaximumLength(50)
             .WithMessage(ValidationConstants.ShortField);
 
-        RuleFor(x => x.ExperienceInYears)
+        RuleFor(x => x.Body.ExperienceInYears)
             .Cascade(CascadeMode.Continue)
         .NotEmpty()
             .WithMessage(ValidationConstants.FieldCantBeEmpty)

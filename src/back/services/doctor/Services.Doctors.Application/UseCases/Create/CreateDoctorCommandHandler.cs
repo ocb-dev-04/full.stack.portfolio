@@ -34,8 +34,8 @@ internal sealed class CreateDoctorCommandHandler
         if(checkCredential.IsFailure)
             return Result.Failure<DoctorResponse>(checkCredential.Error);
 
-        StringObject name = StringObject.Create(request.Name);
-        StringObject specialty = StringObject.Create(request.Specialty);
+        StringObject name = StringObject.Create(request.Body.Name);
+        StringObject specialty = StringObject.Create(request.Body.Specialty);
         bool exist = await _doctorRepository.ExistAsync(e => e.Name.Equals(name) && e.Specialty.Equals(specialty), cancellationToken);
         if (exist)
             return Result.Failure<DoctorResponse>(DoctorErrors.AlreadyExist);
@@ -44,7 +44,7 @@ internal sealed class CreateDoctorCommandHandler
             GuidObject.Create(request.CredentialId.ToString()),
             name,
             specialty,
-            IntegerObject.Create(request.ExperienceInYears));
+            IntegerObject.Create(request.Body.ExperienceInYears));
 
         await _doctorRepository.CreateAsync(created, cancellationToken);
         await _doctorRepository.CommitAsync(cancellationToken);
