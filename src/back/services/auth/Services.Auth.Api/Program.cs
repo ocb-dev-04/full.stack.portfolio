@@ -5,8 +5,6 @@ using Shared.Global.Sources.Middlewares;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-
-
 builder.AddServices();
 
 WebApplication app = builder.Build();

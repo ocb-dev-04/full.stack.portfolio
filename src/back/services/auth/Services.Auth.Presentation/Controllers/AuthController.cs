@@ -113,6 +113,5 @@ public sealed class AuthController : BaseController
         return response.Match(Ok, HandleErrorResults);
     }
 
-
     #endregion
 }

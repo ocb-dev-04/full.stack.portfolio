@@ -1,21 +1,18 @@
 ﻿using Shared.Domain.Settings;
-using Services.Auth.Presentation;
-using Services.Auth.Persistence;
-using Services.Auth.Application;
+using Services.Doctors.Presentation;
+using Services.Doctors.Persistence;
+using Services.Doctors.Application;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using Services.Auth.Application.Settings;
 using Shared.Common.Helper;
 using Common.Services;
 using Shared.Consul.Configuration;
 
-namespace Services.Auth.Api.Extensions;
+namespace Services.Doctors.Api.Extensions;
 
 internal static class Services
 {
@@ -35,13 +32,12 @@ internal static class Services
             options.EnableForHttps = true;
         });
 
-        services.AddOptions<JwtSettings>()
-            .BindConfiguration(nameof(JwtSettings))
-            .ValidateDataAnnotations()
-            .ValidateOnStart();
-
         services.AddOptions<RelationalDatabaseSettings>()
             .BindConfiguration(nameof(RelationalDatabaseSettings))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+        services.AddOptions<CacheDatabaseSettings>()
+            .BindConfiguration(nameof(CacheDatabaseSettings))
             .ValidateDataAnnotations()
             .ValidateOnStart();
         services.AddOptions<MessageQueueSettings>()
@@ -56,55 +52,24 @@ internal static class Services
         services.AddSharedCommonProviders()
             .AddHashingServices();
 
-        services.AddJWt()
-            .AddCustomSwagger()
+        services.AddCustomSwagger()
             .AddConsulServices()
             .AddHealthCheck()
             .AddTelemetries(configuration);
     }
-
-    private static IServiceCollection AddJWt(this IServiceCollection services)
-    {
-        services
-            .AddAuthorization()
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                IServiceScope serviceScope = services.BuildServiceProvider().CreateScope();
-
-                IOptions<JwtSettings>? jwtSettingSetup = serviceScope.ServiceProvider.GetService<IOptions<JwtSettings>>();
-                ArgumentNullException.ThrowIfNull(jwtSettingSetup, nameof(jwtSettingSetup));
-                JwtSettings jwtSetting = jwtSettingSetup.Value;
-
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = jwtSetting.ValidateIssuerSigningKey,
-                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtSetting.IssuerSigningKey)),
-                    RequireExpirationTime = jwtSetting.RequireExpirationTime,
-                    ValidateLifetime = jwtSetting.ValidateLifetime,
-                    ValidateIssuer = jwtSetting.ValidateIssuer,
-                    ValidIssuer = jwtSetting.ValidIssuer,
-                    ValidAudience = jwtSetting.ValidAudience,
-                    ValidateAudience = jwtSetting.ValidateAudience,
-                    ClockSkew = TimeSpan.Zero,
-                };
-            });
-
-        return services;
-    }
-
+    
     private static IServiceCollection AddCustomSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(options =>
         {
             options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
             {
-                Name = "Authorization",
+                Name = "Doctorsorization",
                 Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
                 Scheme = "Bearer",
                 BearerFormat = "JWT",
                 In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-                Description = "JWT Authorization header using the Bearer scheme."
+                Description = "JWT Doctorsorization header using the Bearer scheme."
             });
 
             options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement {
@@ -133,6 +98,14 @@ internal static class Services
                 name: "PostgreSQL",
                 tags: new[] { "database", "relational" }
             )
+            //.AddMongoDb(
+            //    sp => sp.GetRequiredService<IOptions<NoRelationalDatabaseSettings>>().Value.ConnectionString,
+            //    name: "MongoDB",
+            //    tags: new[] { "database", "no relational" })
+            //.AddRedis(
+            //    sp => sp.GetRequiredService<IOptions<CacheDatabaseSettings>>().Value.ConnectionString,
+            //    name: "Redis",
+            //    tags: new[] { "database", "in memory" })
             .AddRabbitMQ(
                 services.BuildServiceProvider().GetRequiredService<IOptions<MessageQueueSettings>>().Value.Url,
                 name: "RabbitMQ",
@@ -154,8 +127,8 @@ internal static class Services
 
         services.AddOpenTelemetry()
             .WithMetrics(opt =>
-                opt.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("ApplicationServices.Auth.Api"))
-                   .AddMeter("Service_Auth_OpenRemoteManage")
+                opt.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("ApplicationServices.Doctors.Api"))
+                   .AddMeter("Service_Doctors_OpenRemoteManage")
                    .AddAspNetCoreInstrumentation()
                    .AddRuntimeInstrumentation()
                    .AddProcessInstrumentation()
@@ -163,7 +136,7 @@ internal static class Services
                    .AddOtlpExporter(otlpAction)
             )
             .WithTracing(opt =>
-                opt.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("ApplicationServices.Auth.Api"))
+                opt.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("ApplicationServices.Doctors.Api"))
                    .AddAspNetCoreInstrumentation()
                    .AddEntityFrameworkCoreInstrumentation()
                    .AddHttpClientInstrumentation()
