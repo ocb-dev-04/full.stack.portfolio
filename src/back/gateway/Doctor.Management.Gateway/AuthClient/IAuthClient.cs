@@ -1,6 +1,6 @@
 ﻿using Refit;
 
-namespace Doctor.Management.Gateway.AuthClientServices;
+namespace Doctor.Management.Gateway.AuthClient;
 
 public interface IAuthClient
 {
