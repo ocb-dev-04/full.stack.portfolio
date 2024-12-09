@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Services.Doctors.Application.Consumers;
+using Services.Doctors.Application.Services;
 using Shared.Domain.Settings;
 using Shared.Global.Sources.Behaviors;
 using Shared.Message.Queue.Requests.Buses;
@@ -30,6 +31,8 @@ public static class ApplicationServices
 
         services.AddMultiBusServices()
             .AddMessgeQueueServices();
+
+        services.AddTransient<MessageQeueServices>();
 
         return services;
     }

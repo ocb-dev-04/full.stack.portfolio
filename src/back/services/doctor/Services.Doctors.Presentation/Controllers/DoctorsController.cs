@@ -10,13 +10,12 @@ using Shared.Common.Helper.Extensions;
 
 namespace Services.Doctors.Presentation.Controllers;
 
-[Authorize]
 [ApiController]
 [Route("doctors")]
 [Produces("application/json")]
-internal class DoctorsController : BaseController
+public sealed class DoctorsController : BaseController
 {
-    protected DoctorsController(ISender sender) : base(sender)
+    public DoctorsController(ISender sender) : base(sender)
     {
     }
 
@@ -88,26 +87,33 @@ internal class DoctorsController : BaseController
                 error: HandleErrorResults);
     }
 
-    [HttpPatch]
+    [HttpPatch("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> ChangePassword([FromBody] UpdateDoctorCommand command, CancellationToken cancellationToken)
+    public async Task<IActionResult> Update(
+        [FromRoute, Required] Guid id,
+        [FromHeader, Required] Guid credentialId,
+        [FromBody] UpdateDoctorRequest request, CancellationToken cancellationToken)
     {
+        UpdateDoctorCommand command = new(id, credentialId, request);
         Result<DoctorResponse> response = await _sender.Send(command, cancellationToken);
 
         return response.Match(Ok, HandleErrorResults);
     }
     
     [HttpDelete("{id:guid}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> ChangePassword([FromRoute, Required] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Remove(
+        [FromRoute, Required] Guid id, 
+        [FromHeader, Required] Guid credentialId, 
+        CancellationToken cancellationToken)
     {
-        RemoveDoctorCommand command = new(id);
+        RemoveDoctorCommand command = new(id, credentialId);
         Result response = await _sender.Send(command, cancellationToken);
 
         return response.Match(Ok, HandleErrorResults);

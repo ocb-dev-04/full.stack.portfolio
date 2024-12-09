@@ -15,7 +15,7 @@ internal static class HealthChecks
     /// <returns></returns>
     internal static void UseCustomHealthChecks(this WebApplication app)
     {
-        app.MapHealthChecks("/auth/health", new HealthCheckOptions
+        app.MapHealthChecks("/doctors/health", new HealthCheckOptions
         {
             ResponseWriter = async (context, report) =>
             {

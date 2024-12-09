@@ -13,7 +13,7 @@ using Services.Doctors.Persistence.Context;
 namespace Services.Doctors.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241209044305_Doctors_Migration")]
+    [Migration("20241209044718_Doctors_Migration")]
     partial class Doctors_Migration
     {
         /// <inheritdoc />
@@ -76,10 +76,7 @@ namespace Services.Doctors.Persistence.Migrations
 
                     b.HasIndex("CredentialId", "Name", "Specialty", "ExperienceInYears");
 
-                    b.ToTable("Doctor", "doctors", t =>
-                        {
-                            t.HasCheckConstraint("CK_Doctor_ExperienceInYears_MaxValue", "[ExperienceInYears] <= 100");
-                        });
+                    b.ToTable("Doctor", "doctors");
                 });
 #pragma warning restore 612, 618
         }

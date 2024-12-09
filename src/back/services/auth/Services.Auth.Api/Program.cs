@@ -15,6 +15,7 @@ if (app.Environment.IsDevelopment())
     app.CheckMigrations();
 }
 
+app.UseConsultServiceRegistry();
 app.UseCustomHealthChecks();
 app.UseResponseCompression();
 
@@ -23,10 +24,8 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
-
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
-app.UseConsultServiceRegistry();
+app.MapControllers();
 
 app.Run();

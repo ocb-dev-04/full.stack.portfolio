@@ -4,6 +4,9 @@ using Doctor.Management.Gateway.Settings;
 using Doctor.Management.Gateway.ProxyConfig;
 using Yarp.ReverseProxy.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Doctor.Management.Gateway.AuthClientServices;
+using Refit;
+using System;
 
 namespace Doctor.Management.Gateway.Extensions;
 
@@ -18,6 +21,7 @@ public static class Services
 
         builder.Services
             .AddConsulAsService()
+            .AddAuthService()
             .AddReverseProxy();
     }
 
@@ -40,6 +44,23 @@ public static class Services
         services.AddSingleton<InMemoryProxyConfig>();
         services.AddSingleton<ConsulProxyConfigProvider>();
         services.AddSingleton<IProxyConfigProvider, ConsulProxyConfigProvider>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddAuthService(this IServiceCollection services)
+    {
+        services.AddOptions<AuthSettings>()
+            .BindConfiguration(nameof(AuthSettings))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        services.AddRefitClient<IAuthClient>()
+            .ConfigureHttpClient((sp, c) =>
+                {
+                    AuthSettings authSettings = sp.GetRequiredService<IOptions<AuthSettings>>().Value;
+                    c.BaseAddress = new Uri(authSettings.Endpoint);
+                });
 
         return services;
     }

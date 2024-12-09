@@ -6,6 +6,7 @@ using Services.Doctors.Domain.Errors;
 using Shared.Common.Helper.Models;
 using Shared.Common.Helper.Providers;
 using Value.Objects.Helper.Values.Primitives;
+using Services.Doctors.Domain.StrongIds;
 
 namespace Services.Doctors.Application.UseCases;
 internal sealed class UpdateDoctorCommandHandler
@@ -27,18 +28,21 @@ internal sealed class UpdateDoctorCommandHandler
 
     public async Task<Result<DoctorResponse>> Handle(UpdateDoctorCommand request, CancellationToken cancellationToken)
     {
-        Result<CurrentRequestUser> currentUser = _httpRequestProvider.GetContextCurrentUser();
-        if (currentUser.IsFailure)
-            return Result.Failure<DoctorResponse>(currentUser.Error);
+        Result<DoctorId> doctorId = DoctorId.Create(request.Id); 
+        if (doctorId.IsFailure)
+            return Result.Failure<DoctorResponse>(doctorId.Error);
 
-        Result<Doctor> found = await _doctorRepository.ByCredentialId(GuidObject.Create(currentUser.Value.CredentialId.ToString()), cancellationToken);
+        Result<Doctor> found = await _doctorRepository.ByIdAsync(doctorId.Value, cancellationToken);
         if (found.IsFailure)
             return Result.Failure<DoctorResponse>(found.Error);
 
+        if(!found.Value.CredentialId.Value.Equals(request.CredentialId))
+            return Result.Failure<DoctorResponse>(DoctorErrors.YouAreNotTheOwner);
+
         found.Value.UpdateGeneaalData(
-            StringObject.Create(request.Name),
-            StringObject.Create(request.Specialty),
-            IntegerObject.Create(request.ExperienceInYears));
+            StringObject.Create(request.Body.Name),
+            StringObject.Create(request.Body.Specialty),
+            IntegerObject.Create(request.Body.ExperienceInYears));
         await _doctorRepository.CommitAsync(cancellationToken);
 
         return DoctorResponse.Map(found.Value);

@@ -41,15 +41,23 @@ public sealed class AuthController : BaseController
     }
 
     /// <summary>
-    /// Check access
+    /// Check access and return credential related to token
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [Authorize]
     [HttpGet("check-access")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCredentialByToken(CancellationToken cancellationToken)
-        => await Task.FromResult(Ok());
+    [ProducesResponseType(typeof(CredentialResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> CheckAccess(CancellationToken cancellationToken)
+    {
+        GetCredentialByTokenQuery query = new();
+        Result<CredentialResponse> response = await _sender.Send(query, cancellationToken);
+
+        return response.Match(value => Ok(value), HandleErrorResults);
+    }
 
     #endregion
 

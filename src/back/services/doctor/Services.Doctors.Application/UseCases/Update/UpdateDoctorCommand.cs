@@ -4,17 +4,36 @@ using CQRS.MediatR.Helper.Abstractions.Messaging;
 
 namespace Services.Doctors.Application.UseCases;
 
-public sealed record UpdateDoctorCommand(
+public sealed record UpdateDoctorRequest(
     string Name,
     string Specialty,
-    int ExperienceInYears) : ICommand<DoctorResponse>;
+    int ExperienceInYears);
+
+public sealed record UpdateDoctorCommand(
+    Guid Id,
+    Guid CredentialId,
+    UpdateDoctorRequest Body) : ICommand<DoctorResponse>;
 
 internal sealed class UpdateDoctorCommandValidator
     : AbstractValidator<UpdateDoctorCommand>
 {
     public UpdateDoctorCommandValidator()
     {
-        RuleFor(x => x.Name)
+        RuleFor(x => x.Id)
+            .Cascade(CascadeMode.Continue)
+        .NotEmpty()
+            .WithMessage(ValidationConstants.FieldCantBeEmpty)
+        .NotNull()
+            .WithMessage(ValidationConstants.RequiredField);
+
+        RuleFor(x => x.CredentialId)
+            .Cascade(CascadeMode.Continue)
+        .NotEmpty()
+            .WithMessage(ValidationConstants.FieldCantBeEmpty)
+        .NotNull()
+            .WithMessage(ValidationConstants.RequiredField);
+
+        RuleFor(x => x.Body.Name)
             .Cascade(CascadeMode.Continue)
         .NotEmpty()
             .WithMessage(ValidationConstants.FieldCantBeEmpty)
@@ -23,7 +42,7 @@ internal sealed class UpdateDoctorCommandValidator
         .MaximumLength(100)
             .WithMessage(ValidationConstants.ShortField);
 
-        RuleFor(x => x.Specialty)
+        RuleFor(x => x.Body.Specialty)
             .Cascade(CascadeMode.Continue)
         .NotEmpty()
             .WithMessage(ValidationConstants.FieldCantBeEmpty)
@@ -32,7 +51,7 @@ internal sealed class UpdateDoctorCommandValidator
         .MaximumLength(50)
             .WithMessage(ValidationConstants.ShortField);
 
-        RuleFor(x => x.ExperienceInYears)
+        RuleFor(x => x.Body.ExperienceInYears)
             .Cascade(CascadeMode.Continue)
         .NotEmpty()
             .WithMessage(ValidationConstants.FieldCantBeEmpty)

@@ -33,7 +33,6 @@ namespace Services.Doctors.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Doctor", x => x.Id);
-                    table.CheckConstraint("CK_Doctor_ExperienceInYears_MaxValue", "[ExperienceInYears] <= 100");
                 });
 
             migrationBuilder.CreateIndex(

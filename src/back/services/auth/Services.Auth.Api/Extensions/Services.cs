@@ -132,11 +132,6 @@ internal static class Services
                 sp => sp.GetRequiredService<IOptions<RelationalDatabaseSettings>>().Value.ConnectionString,
                 name: "PostgreSQL",
                 tags: new[] { "database", "relational" }
-            )
-            .AddRabbitMQ(
-                services.BuildServiceProvider().GetRequiredService<IOptions<MessageQueueSettings>>().Value.Url,
-                name: "RabbitMQ",
-                tags: new[] { "queue", "messaging" }
             );
 
         return services;

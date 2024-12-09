@@ -1,4 +1,4 @@
-﻿using Shared.Global.Sources.Extensions;
+﻿using Shared.Common.Helper.Extensions;
 using Value.Objects.Helper.Values.Primitives;
 
 namespace Services.Doctors.Domain.Entities;

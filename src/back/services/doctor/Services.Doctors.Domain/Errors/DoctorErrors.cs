@@ -13,4 +13,7 @@ public sealed class DoctorErrors
     public static Error AlreadyExist
         = Error.BadRequest("doctorAlreadyExist", "The doctor already exist");
 
+    public static Error YouAreNotTheOwner
+        = Error.BadRequest("youAreNotTheOwner", "You not are the owner");
+
 }

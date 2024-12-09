@@ -5,6 +5,7 @@ using CQRS.MediatR.Helper.Abstractions.Messaging;
 namespace Services.Doctors.Application.UseCases;
 
 public sealed record CreateDoctorCommand(
+    Guid CredentialId,
     string Name,
     string Specialty,
     int ExperienceInYears) : ICommand<DoctorResponse>;
@@ -14,6 +15,13 @@ internal sealed class CreateDoctorCommandValidator
 {
     public CreateDoctorCommandValidator()
     {
+        RuleFor(x => x.CredentialId)
+            .Cascade(CascadeMode.Continue)
+        .NotEmpty()
+            .WithMessage(ValidationConstants.FieldCantBeEmpty)
+        .NotNull()
+            .WithMessage(ValidationConstants.RequiredField);
+
         RuleFor(x => x.Name)
             .Cascade(CascadeMode.Continue)
         .NotEmpty()

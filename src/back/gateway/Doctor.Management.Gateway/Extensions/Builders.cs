@@ -7,11 +7,10 @@ public static class Builders
     public static async Task AddDynamicRoutes(this WebApplication app)
     {
         app.Logger.LogWarning("--> Waiting a few seconds while services register with consul...");
+        await Task.Delay(20 * 1000);
 
         try
         {
-            // We wait about 20 seconds for all services to be up
-            await Task.Delay(20 * 1000);
 
             ConsulProxyConfigProvider provider = app.Services.GetRequiredService<ConsulProxyConfigProvider>();
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();

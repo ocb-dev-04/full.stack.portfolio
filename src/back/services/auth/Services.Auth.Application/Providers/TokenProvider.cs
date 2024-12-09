@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using System.Security.Claims;
 
-using Shared.Common.Helper.Models;
 using Shared.Common.Helper.Providers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;

@@ -63,12 +63,7 @@ internal sealed class DoctorFluentConfiguration
             i.Specialty,
             i.ExperienceInYears
         });
-
-        builder.ToTable(t 
-            => t.HasCheckConstraint(
-                $"CK_{nameof(Doctor)}_{nameof(Doctor.ExperienceInYears)}_MaxValue",
-                $"[{nameof(Doctor.ExperienceInYears)}] <= {_maxExperienceInYears}"));
-
+        
         builder.Metadata.SetSchema("doctors");
     }
 }

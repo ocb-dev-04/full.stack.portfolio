@@ -6,8 +6,8 @@ using Services.Doctors.Domain.Abstractions;
 using Services.Doctors.Persistence.Context;
 using Shared.Common.Helper.ErrorsHandler;
 using Value.Objects.Helper.Values.Primitives;
-using Shared.Global.Sources.Extensions;
 using System.Linq.Expressions;
+using Shared.Common.Helper.Extensions;
 
 namespace Services.Doctors.Persistence.Repositories;
 
