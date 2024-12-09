@@ -14,8 +14,6 @@ internal sealed class AppDbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
-        modelBuilder.
-
         base.OnModelCreating(modelBuilder);
     }
 }

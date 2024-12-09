@@ -1,7 +1,6 @@
 using Shared.Consul.Configuration;
-using Services.Doctors.Persistence;
-using Services.Auth.Api.Extensions;
-using Services.Doctors.Api.Extensions;
+using Services.Patients.Persistence;
+using Services.Patients.Api.Extensions;
 using Shared.Global.Sources.Middlewares;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);

@@ -6,12 +6,17 @@ namespace Shared.Message.Queue.Requests.Requests;
 public sealed class GetPatientCollectionByDoctorIdRequest
 {
     public Guid Id { get; set; }
+    public int PageNumber { get; set; }
 
     public GetPatientCollectionByDoctorIdRequest()
     {
 
     }
 
-    public static GetPatientCollectionByDoctorIdRequest Create(Guid id)
-        => new GetPatientCollectionByDoctorIdRequest { Id = id };
+    public static GetPatientCollectionByDoctorIdRequest Create(Guid id, int pageNumber)
+        => new GetPatientCollectionByDoctorIdRequest
+        {
+            Id = id,
+            PageNumber = pageNumber
+        };
 }

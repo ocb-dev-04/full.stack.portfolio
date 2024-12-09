@@ -35,7 +35,7 @@ internal sealed class GetPatientCollectionByDoctorIdsConsumer
 
     private async Task Process(ConsumeContext<GetPatientCollectionByDoctorIdRequest> context)
     {
-        GetPatientCollectionByDoctorIdQuery query = new(context.Message.Id);
+        GetPatientCollectionByDoctorIdQuery query = new(context.Message.Id, context.Message.PageNumber);
         Result<IEnumerable<PatientResponse>> queryResponse = await _sender.Send(query, context.CancellationToken);
 
         if (queryResponse.IsFailure)

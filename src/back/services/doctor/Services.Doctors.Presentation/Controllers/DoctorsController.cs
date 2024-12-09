@@ -1,11 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Services.Doctors.Presentation.Controllers.Base;
 using Microsoft.AspNetCore.Http;
+using Services.Doctors.Domain.Dtos;
+using Shared.Common.Helper.Extensions;
+using Shared.Common.Helper.ErrorsHandler;
 using Services.Doctors.Application.UseCases;
 using System.ComponentModel.DataAnnotations;
-using Shared.Common.Helper.ErrorsHandler;
-using Shared.Common.Helper.Extensions;
+using Services.Doctors.Presentation.Controllers.Base;
 
 namespace Services.Doctors.Presentation.Controllers;
 
@@ -33,7 +34,7 @@ public sealed class DoctorsController : BaseController
     }
     
     [HttpGet("by-name")]
-    [ProducesResponseType(typeof(IEnumerable<DoctorResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<DoctorDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetCollectionByName(
@@ -42,13 +43,13 @@ public sealed class DoctorsController : BaseController
         CancellationToken cancellationToken)
     {
         GetDoctorCollectionByNameQuery query = new(name, pageNumber);
-        Result<IEnumerable<DoctorResponse>> response = await _sender.Send(query, cancellationToken);
+        Result<IEnumerable<DoctorDto>> response = await _sender.Send(query, cancellationToken);
 
         return response.Match(Ok, HandleErrorResults);
     }
     
     [HttpGet("by-specialty")]
-    [ProducesResponseType(typeof(IEnumerable<DoctorResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<DoctorDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetCollectionBySpecialty(
@@ -57,7 +58,7 @@ public sealed class DoctorsController : BaseController
         CancellationToken cancellationToken)
     {
         GetDoctorCollectionBySpecialtyQuery query = new(specialty, pageNumber);
-        Result<IEnumerable<DoctorResponse>> response = await _sender.Send(query, cancellationToken);
+        Result<IEnumerable<DoctorDto>> response = await _sender.Send(query, cancellationToken);
 
         return response.Match(Ok, HandleErrorResults);
     }
