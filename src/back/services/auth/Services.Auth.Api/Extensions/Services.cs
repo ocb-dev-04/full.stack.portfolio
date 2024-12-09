@@ -17,7 +17,7 @@ using Shared.Consul.Configuration;
 
 namespace Services.Auth.Api.Extensions;
 
-internal static class Services
+public static class Services
 {
     public static void AddServices(this WebApplicationBuilder builder)
     {

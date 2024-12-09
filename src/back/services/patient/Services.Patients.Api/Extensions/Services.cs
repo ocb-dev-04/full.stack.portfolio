@@ -14,7 +14,7 @@ using Shared.Consul.Configuration;
 
 namespace Services.Patients.Api.Extensions;
 
-internal static class Services
+public static class Services
 {
     public static void AddServices(this WebApplicationBuilder builder)
     {

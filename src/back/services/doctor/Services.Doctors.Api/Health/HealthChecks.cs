@@ -6,14 +6,14 @@ namespace Services.Doctors.Api.Extensions;
 /// <summary>
 /// Class to add healt checks
 /// </summary>
-internal static class HealthChecks
+public static class HealthChecks
 {
     /// <summary>
     /// Add all customs health checks
     /// </summary>
     /// <param name="app"></param>
     /// <returns></returns>
-    internal static void UseCustomHealthChecks(this WebApplication app)
+    public static void UseCustomHealthChecks(this WebApplication app)
     {
         app.MapHealthChecks("/doctors/health", new HealthCheckOptions
         {
