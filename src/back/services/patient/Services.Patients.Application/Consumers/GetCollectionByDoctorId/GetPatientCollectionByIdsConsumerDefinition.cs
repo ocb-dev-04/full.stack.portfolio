@@ -1,20 +1,21 @@
 ﻿using MassTransit;
 
-namespace Services.Auth.Application.Consumers;
+namespace Services.Patients.Application.Consumers;
 
-internal sealed class GetCredentialByIdConsumerDefinition
-    : ConsumerDefinition<GetCredentialByIdConsumer>
+internal class GetPatientCollectionByDoctorIdsConsumerDefinition
+     : ConsumerDefinition<GetPatientCollectionByDoctorIdsConsumer>
 {
-    private readonly static string _consumerName = "get-credential-by-id-queue";
 
-    public GetCredentialByIdConsumerDefinition()
+    private readonly static string _consumerName = "get-patient-collection-by-doctor-by-id-queue";
+
+    public GetPatientCollectionByDoctorIdsConsumerDefinition()
     {
         EndpointName = _consumerName;
     }
 
     protected override void ConfigureConsumer(
         IReceiveEndpointConfigurator endpointConfigurator,
-        IConsumerConfigurator<GetCredentialByIdConsumer> consumerConfigurator,
+        IConsumerConfigurator<GetPatientCollectionByDoctorIdsConsumer> consumerConfigurator,
         IRegistrationContext context)
     {
         endpointConfigurator.DiscardSkippedMessages();

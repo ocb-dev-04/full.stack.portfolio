@@ -5,12 +5,8 @@ namespace Services.Doctors.Application.Consumers;
 internal sealed class GetDoctorByIdConsumerDefinition
      : ConsumerDefinition<GetDoctorByIdConsumer>
 {
-
     private readonly static string _consumerName = "get-doctor-by-id-queue";
 
-    /// <summary>
-    /// <see cref="GetDoctorByIdConsumerDefinition"/> constructor
-    /// </summary>
     public GetDoctorByIdConsumerDefinition()
     {
         EndpointName = _consumerName;
