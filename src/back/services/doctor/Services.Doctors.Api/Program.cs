@@ -1,6 +1,5 @@
 using Shared.Consul.Configuration;
 using Services.Doctors.Persistence;
-using Services.Auth.Api.Extensions;
 using Services.Doctors.Api.Extensions;
 using Shared.Global.Sources.Middlewares;
 

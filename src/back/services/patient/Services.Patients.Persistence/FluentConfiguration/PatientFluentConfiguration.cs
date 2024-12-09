@@ -3,6 +3,7 @@ using Services.Patients.Domain.Entities;
 using Services.Patients.Domain.StrongIds;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Value.Objects.Helper.FluentApiConverters.Primitives;
+using Value.Objects.Helper.Values.Primitives;
 
 namespace Services.Patients.Persistence.FluentConfiguration;
 
@@ -43,14 +44,16 @@ internal sealed class PatientFluentConfiguration
 
         builder.Property<uint>("version").IsRowVersion();
 
-
         builder.HasKey(o => o.Id);
         builder.HasIndex(i => new
         {
             i.DoctorId,
             i.Name
         });
-        
+
+        builder.HasQueryFilter(p
+            => p.Deleted.Equals(BooleanObject.CreateAsTrue()));
+
         builder.Metadata.SetSchema("patients");
     }
 }

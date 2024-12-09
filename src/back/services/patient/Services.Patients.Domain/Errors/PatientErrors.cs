@@ -11,7 +11,7 @@ public sealed class PatientErrors
         = Error.BadRequest("patientNotModified", "The patient was not modified");
 
     public static Error AlreadyExist
-        = Error.BadRequest("doctorAlreadyExist", "The doctor already exist");
+        = Error.BadRequest("patientAlreadyExist", "The patient already exist");
 
     public static Error YouAreNotTheOwner
         = Error.BadRequest("youAreNotTheOwner", "You not are the owner");

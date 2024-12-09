@@ -46,7 +46,7 @@ public sealed class AuthenticationMiddleware
                 return;
             }
 
-            context.Request.Headers.TryAdd("CredentialId", response.Content!.Id.ToString());
+            context.Request.Headers.TryAdd("X-Credential-Id", response.Content!.Id.ToString());
         }
         catch (Exception)
         {

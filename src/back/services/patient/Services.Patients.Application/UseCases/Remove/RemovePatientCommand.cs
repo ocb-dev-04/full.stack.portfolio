@@ -4,7 +4,7 @@ using CQRS.MediatR.Helper.Abstractions.Messaging;
 
 namespace Services.Patients.Application.UseCases;
 
-public sealed record RemovePatientCommand(Guid Id)
+public sealed record RemovePatientCommand(Guid Id, Guid DoctorId)
     : ICommand;
 
 internal sealed class RemovePatientCommandValidator
@@ -14,9 +14,16 @@ internal sealed class RemovePatientCommandValidator
     {
         RuleFor(x => x.Id)
             .Cascade(CascadeMode.Continue)
-        .NotEmpty()
-            .WithMessage(ValidationConstants.FieldCantBeEmpty)
-        .NotNull()
-            .WithMessage(ValidationConstants.RequiredField);
+            .NotEmpty()
+                .WithMessage(ValidationConstants.FieldCantBeEmpty)
+            .NotNull()
+                .WithMessage(ValidationConstants.RequiredField);
+
+        RuleFor(x => x.DoctorId)
+            .Cascade(CascadeMode.Continue)
+            .NotEmpty()
+                .WithMessage(ValidationConstants.FieldCantBeEmpty)
+            .NotNull()
+                .WithMessage(ValidationConstants.RequiredField);
     }
 }

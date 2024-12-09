@@ -12,6 +12,7 @@ public sealed partial class Patient
 
     public StringObject Name { get; private set; }
     public IntegerObject Age { get; private set; }
+    public BooleanObject Deleted { get; private set; } = BooleanObject.CreateAsFalse();
 
     public AuditDates AuditDates { get; init; } = AuditDates.Init();
 

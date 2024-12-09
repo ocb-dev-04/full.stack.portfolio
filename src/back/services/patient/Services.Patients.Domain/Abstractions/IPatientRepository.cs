@@ -9,7 +9,6 @@ public interface IPatientRepository
     : ISingleQueriesGenericRepository<Patient, PatientId>,
         IBooleanGenericRepository<Patient, PatientId>,
         ICreateGenericRepository<Patient, PatientId>,
-        IDeleteAsyncGenericRepository<Patient, PatientId>,
         IDisposable
 {
     /// <summary>

@@ -8,6 +8,7 @@ using Services.Patients.Application.Consumers;
 using Services.Patients.Application.Services;
 using Shared.Domain.Settings;
 using CQRS.MediatR.Helper.Abstractions.Behaviors;
+using Shared.Message.Queue.Requests.Buses;
 
 namespace Services.Patients.Application;
 
@@ -42,7 +43,7 @@ public static class ApplicationServices
         {
             busRegConfig.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter(prefix: string.Empty, includeNamespace: false));
 
-            busRegConfig.AddConsumer<GetDoctorByIdConsumer, GetDoctorByIdConsumerDefinition>();
+            busRegConfig.AddConsumer<GetPatientCollectionByDoctorIdsConsumer, GetPatientCollectionByDoctorIdsConsumerDefinition>();
 
             busRegConfig.UsingRabbitMq((ctx, config) =>
             {

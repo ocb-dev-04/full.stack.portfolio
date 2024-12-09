@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using Services.Doctors.Presentation.Controllers.Base;
 using Microsoft.AspNetCore.Http;
 using Services.Doctors.Application.UseCases;
@@ -52,7 +51,7 @@ public sealed class DoctorsController : BaseController
     [ProducesResponseType(typeof(IEnumerable<DoctorResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetDoctorCollectionBySpecialty(
+    public async Task<IActionResult> GetCollectionBySpecialty(
         [FromQuery, Required] string specialty, 
         [FromQuery, Required] int pageNumber, 
         CancellationToken cancellationToken)
@@ -85,7 +84,7 @@ public sealed class DoctorsController : BaseController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Create(
-        [FromHeader, Required] Guid credentialId, 
+        [FromHeader(Name = "X-Credential-Id"), Required] Guid credentialId, 
         [FromBody] CreateDoctorRequest request,
         CancellationToken cancellationToken)
     {
@@ -104,7 +103,7 @@ public sealed class DoctorsController : BaseController
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Update(
         [FromRoute, Required] Guid id,
-        [FromHeader, Required] Guid credentialId,
+        [FromHeader(Name = "X-Credential-Id"), Required] Guid credentialId,
         [FromBody] UpdateDoctorRequest request, 
         CancellationToken cancellationToken)
     {
@@ -120,8 +119,8 @@ public sealed class DoctorsController : BaseController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Remove(
-        [FromRoute, Required] Guid id, 
-        [FromHeader, Required] Guid credentialId, 
+        [FromRoute, Required] Guid id,
+        [FromHeader(Name = "X-Credential-Id"), Required] Guid credentialId,
         CancellationToken cancellationToken)
     {
         RemoveDoctorCommand command = new(id, credentialId);

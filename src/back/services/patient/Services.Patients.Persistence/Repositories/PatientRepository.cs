@@ -63,18 +63,6 @@ internal sealed class PatientRepository
         => await _table.AddAsync(model, cancellationToken);
 
     /// <inheritdoc/>
-    public async Task<Result> DeleteAsync(PatientId id, CancellationToken cancellationToken = default)
-    {
-        Patient? found = await _table.FindAsync(id, cancellationToken);
-        if (found is null)
-            return Result.Failure(PatientErrors.NotFound);
-
-        _table.Remove(found);
-
-        return Result.Success();
-    }
-
-    /// <inheritdoc/>
     public async Task CommitAsync(CancellationToken cancellationToken)
     {
         if (_dbContext.ChangeTracker.HasChanges())

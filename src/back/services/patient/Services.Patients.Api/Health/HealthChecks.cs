@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
-namespace Services.Doctors.Api.Extensions;
+namespace Services.Auth.Api.Extensions;
 
 /// <summary>
 /// Class to add healt checks

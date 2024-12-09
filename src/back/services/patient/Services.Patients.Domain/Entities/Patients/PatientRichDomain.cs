@@ -1,5 +1,4 @@
-﻿using Shared.Common.Helper.Extensions;
-using Value.Objects.Helper.Values.Primitives;
+﻿using Value.Objects.Helper.Values.Primitives;
 
 namespace Services.Patients.Domain.Entities;
 
@@ -8,22 +7,19 @@ public sealed partial class Patient
     /// <summary>
     /// Create a new <see cref="Patient"/>
     /// </summary>
-    /// <param name="credentialId"></param>
+    /// <param name="doctorId"></param>
     /// <param name="name"></param>
-    /// <param name="specialty"></param>
-    /// <param name="experienceInYears"></param>
+    /// <param name="age"></param>
     /// <returns></returns>
     public static Patient Create(
-        GuidObject credentialId,
+        GuidObject doctorId,
         StringObject name,
-        StringObject specialty,
-        IntegerObject experienceInYears)
+        IntegerObject age)
     {
         Patient created = new(
-            credentialId, 
+            doctorId, 
             name, 
-            name.Value.NormalizeToFTS(), 
-            specialty, experienceInYears);
+            age);
 
         return created;
     }
@@ -32,16 +28,23 @@ public sealed partial class Patient
     /// Update <see cref="Patient"/> general information
     /// </summary>
     /// <param name="name"></param>
-    /// <param name="specialty"></param>
-    /// <param name="experienceInYears"></param>
-    public void UpdateGeneaalData(
+    /// <param name="age"></param>
+    public void UpdateGeneralData(
         StringObject name,
-        StringObject specialty,
-        IntegerObject experienceInYears)
+        IntegerObject age)
     {
         Name = name;
-        Specialty = specialty;
-        ExperienceInYears = experienceInYears;
+        Age = age;
+
+        AuditDates.ChangesApplied();
+    }
+
+    /// <summary>
+    /// Set <see cref="Patient"/> as deleted
+    /// </summary>
+    public void SetAsDeleted()
+    {
+        Deleted = BooleanObject.CreateAsTrue();
 
         AuditDates.ChangesApplied();
     }
