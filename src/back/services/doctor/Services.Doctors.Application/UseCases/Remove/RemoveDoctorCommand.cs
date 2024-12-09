@@ -2,15 +2,15 @@
 using Shared.Domain.Constants;
 using CQRS.MediatR.Helper.Abstractions.Messaging;
 
-namespace Services.Auth.Application.UseCases;
+namespace Services.Doctors.Application.UseCases;
 
-internal sealed record GetCredentialByIdQuery(Guid Id) 
-    : IQuery<CredentialResponse>;
+public sealed record RemoveDoctorCommand(Guid Id) 
+    : ICommand;
 
-internal sealed class GetCredentialByIdQueryValidator
-    : AbstractValidator<GetCredentialByIdQuery>
+internal sealed class RemoveDoctorCommandValidator
+    : AbstractValidator<RemoveDoctorCommand>
 {
-    public GetCredentialByIdQueryValidator()
+    public RemoveDoctorCommandValidator()
     {
         RuleFor(x => x.Id)
             .Cascade(CascadeMode.Continue)

@@ -13,7 +13,7 @@ using Common.Services;
 
 namespace Services.Auth.Application;
 
-public static class AuthServices
+public static class ApplicationServices
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
@@ -23,12 +23,12 @@ public static class AuthServices
         services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
         
         services.AddValidatorsFromAssembly(
-            typeof(AuthServices).Assembly, 
+            typeof(ApplicationServices).Assembly, 
             includeInternalTypes: true);
 
         services.AddMediatR(config =>
         {
-            config.RegisterServicesFromAssembly(typeof(AuthServices).Assembly);
+            config.RegisterServicesFromAssembly(typeof(ApplicationServices).Assembly);
 
             config.AddOpenBehavior(typeof(ValidationPipelineBehavior<,>));
         });

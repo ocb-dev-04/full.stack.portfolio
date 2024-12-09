@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Services.Auth.Application.Constants;
+using Shared.Domain.Constants;
 using CQRS.MediatR.Helper.Abstractions.Messaging;
 
 namespace Services.Auth.Application.UseCases;

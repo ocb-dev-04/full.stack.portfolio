@@ -7,6 +7,7 @@ using Services.Doctors.Persistence.Context;
 using Shared.Common.Helper.ErrorsHandler;
 using Value.Objects.Helper.Values.Primitives;
 using Shared.Global.Sources.Extensions;
+using System.Linq.Expressions;
 
 namespace Services.Doctors.Persistence.Repositories;
 
@@ -36,11 +37,42 @@ internal sealed class DoctorRepository
     }
 
     /// <inheritdoc/>
-    public async Task<IReadOnlyCollection<Doctor>> ByNameAsync(StringObject name, int pageNumber, CancellationToken cancellationToken = default)
+    public async Task<Result<Doctor>> ByCredentialId(GuidObject credentialId, CancellationToken cancellationToken)
+    {
+        Doctor? found = await _table.FirstOrDefaultAsync(f => f.CredentialId.Equals(credentialId), cancellationToken);
+        if (found is null)
+            return Result.Failure<Doctor>(DoctorErrors.NotFound);
+
+        return found;
+    }
+
+    /// <inheritdoc/>
+    public async Task<bool> ExistAsync(Expression<Func<Doctor, bool>> filter, CancellationToken cancellationToken = default)
+        => await _table.AsNoTracking()
+                    .AnyAsync(filter, cancellationToken);
+
+    /// <inheritdoc/>
+    public async Task<IReadOnlyCollection<Doctor>> CollectionByNameAsync(StringObject name, int pageNumber, CancellationToken cancellationToken = default)
         => await _table.AsNoTracking()
                     .Where(w => w.NormalizedName.Contains(name.Value.NormalizeToFTS()))
                     .OrderBy(w => w.NormalizedName)
                     .Skip((pageNumber - 1) * _pageSize).Take(_pageSize)
+                    .ToArrayAsync(cancellationToken);
+
+    /// <inheritdoc/>
+    public async Task<IReadOnlyCollection<Doctor>> CollectionBySpecialtyAsync(StringObject specialty, int pageNumber, CancellationToken cancellationToken = default)
+        => await _table.AsNoTracking()
+                    .Where(w => w.Specialty.Equals(specialty))
+                    .OrderBy(w => w.NormalizedName)
+                    .Skip((pageNumber - 1) * _pageSize).Take(_pageSize)
+                    .ToArrayAsync(cancellationToken);
+
+    /// <inheritdoc/>
+    public async Task<IReadOnlyCollection<StringObject>> SpecialtyCollectionAsync(CancellationToken cancellationToken)
+        => await _table.AsNoTracking()
+                    .Select(w => w.Specialty)
+                    .Distinct()
+                    .OrderBy(w => w)
                     .ToArrayAsync(cancellationToken);
 
     /// <inheritdoc/>
@@ -68,4 +100,5 @@ internal sealed class DoctorRepository
 
     public void Dispose()
         => _dbContext.Dispose();
+
 }

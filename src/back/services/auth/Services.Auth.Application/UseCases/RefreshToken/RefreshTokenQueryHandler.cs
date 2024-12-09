@@ -6,7 +6,6 @@ using Services.Auth.Domain.Abstractions;
 using Services.Auth.Domain.Entities;
 using Services.Auth.Domain.StrongIds;
 using Shared.Common.Helper.ErrorsHandler;
-using Shared.Common.Helper.Models;
 using Shared.Common.Helper.Providers;
 using System.IdentityModel.Tokens.Jwt;
 

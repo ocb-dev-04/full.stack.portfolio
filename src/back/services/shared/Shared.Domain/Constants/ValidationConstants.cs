@@ -1,4 +1,4 @@
-﻿namespace Services.Auth.Application.Constants;
+﻿namespace Shared.Domain.Constants;
 
 public static class ValidationConstants
 {

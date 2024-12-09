@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
-using Tickets.Presentation.Controllers.Base;
 
 using Shared.Common.Helper.Extensions;
 using Services.Auth.Application.UseCases;
 using Shared.Common.Helper.ErrorsHandler;
+using Services.Auth.Presentation.Controllers.Base;
 
 namespace Services.Auth.Presentation.Controllers;
 

@@ -41,7 +41,6 @@ internal sealed class DoctorFluentConfiguration
 
         builder.Property(e => e.ExperienceInYears)
             .IsRequired()
-            .HasMaxLength(50)
             .HasConversion<IntegerObjectConverter>();
 
         builder.ComplexProperty(i => i.AuditDates, navProps =>

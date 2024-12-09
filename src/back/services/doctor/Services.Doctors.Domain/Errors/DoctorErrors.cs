@@ -9,4 +9,8 @@ public sealed class DoctorErrors
 
     public static Error NotModified
         = Error.BadRequest("credentialNotModified", "The credential was not modified");
+
+    public static Error AlreadyExist
+        = Error.BadRequest("doctorAlreadyExist", "The doctor already exist");
+
 }

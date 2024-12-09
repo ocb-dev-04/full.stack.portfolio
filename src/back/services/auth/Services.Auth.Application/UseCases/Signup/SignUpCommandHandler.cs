@@ -53,8 +53,8 @@ internal sealed class SignUpCommandHandler
         if (email.IsFailure)
             return Result.Failure<SignupResponse>(email.Error);
 
-        Result<Credential> found = await _credentialRepository.ByEmailAsync(email.Value, false, cancellationToken);
-        if (found.IsSuccess)
+        bool exist = await _credentialRepository.ExistAsync(e => e.Email.Equals(email.Value),  cancellationToken);
+        if (exist)
             return Result.Failure<SignupResponse>(CredentialErrors.EmailAlreadyExist);
         
         string hashedValueResult = _hashService.Hash(request.Password);

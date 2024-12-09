@@ -140,7 +140,7 @@ internal static class Services
                 sp => sp.GetRequiredService<IOptions<RelationalDatabaseSettings>>().Value.ConnectionString,
                 name: "PostgreSQL",
                 tags: new[] { "database", "relational" }
-            );
+            )
             //.AddMongoDb(
             //    sp => sp.GetRequiredService<IOptions<NoRelationalDatabaseSettings>>().Value.ConnectionString,
             //    name: "MongoDB",
@@ -149,11 +149,11 @@ internal static class Services
             //    sp => sp.GetRequiredService<IOptions<CacheDatabaseSettings>>().Value.ConnectionString,
             //    name: "Redis",
             //    tags: new[] { "database", "in memory" })
-            //.AddRabbitMQ(
-            //    services.BuildServiceProvider().GetRequiredService<IOptions<MessageQueueSettings>>().Value.Url,
-            //    name: "RabbitMQ",
-            //    tags: new[] { "queue", "messaging" }
-            //);
+            .AddRabbitMQ(
+                services.BuildServiceProvider().GetRequiredService<IOptions<MessageQueueSettings>>().Value.Url,
+                name: "RabbitMQ",
+                tags: new[] { "queue", "messaging" }
+            );
 
         return services;
     }
@@ -170,7 +170,7 @@ internal static class Services
 
         services.AddOpenTelemetry()
             .WithMetrics(opt =>
-                opt.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("AuthServices.Auth.Api"))
+                opt.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("ApplicationServices.Auth.Api"))
                    .AddMeter("Service_Auth_OpenRemoteManage")
                    .AddAspNetCoreInstrumentation()
                    .AddRuntimeInstrumentation()
@@ -179,7 +179,7 @@ internal static class Services
                    .AddOtlpExporter(otlpAction)
             )
             .WithTracing(opt =>
-                opt.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("AuthServices.Auth.Api"))
+                opt.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("ApplicationServices.Auth.Api"))
                    .AddAspNetCoreInstrumentation()
                    .AddEntityFrameworkCoreInstrumentation()
                    .AddHttpClientInstrumentation()

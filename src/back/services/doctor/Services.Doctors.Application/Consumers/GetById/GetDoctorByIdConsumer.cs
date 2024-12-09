@@ -1,24 +1,24 @@
 ﻿using MediatR;
 using MassTransit;
-using Shared.Message.Queue.Requests;
 using Shared.Common.Helper.Extensions;
 using Common.Services.Bus.Abstractions;
-using Services.Auth.Application.UseCases;
 using Shared.Common.Helper.ErrorsHandler;
+using Services.Doctors.Application.UseCases;
 using Shared.Message.Queue.Requests.Requests;
+using Shared.Message.Queue.Requests.Responses;
 using Shared.Common.Helper.Models.QueueResponses;
 
-namespace Services.Auth.Application.Consumers;
+namespace Services.Doctors.Application.Consumers;
 
-internal sealed class GetCredentialByIdConsumer
-    : IConsumer<GetCredentialByIdRequest>
+internal sealed class GetDoctorByIdConsumer
+    : IConsumer<GetDoctorByIdRequest>
 {
     #region Props & ctor
 
     private readonly ISender _sender;
     private readonly IExecuteHandlerService _executeHandlerRepository;
 
-    public GetCredentialByIdConsumer(
+    public GetDoctorByIdConsumer(
         ISender sender,
         IExecuteHandlerService executeHandlerRepository)
     {
@@ -30,21 +30,22 @@ internal sealed class GetCredentialByIdConsumer
     }
 
     #endregion
-    public async Task Consume(ConsumeContext<GetCredentialByIdRequest> context)
+    public async Task Consume(ConsumeContext<GetDoctorByIdRequest> context)
         => await _executeHandlerRepository.Execute(() => Process(context), context);
 
-    private async Task Process(ConsumeContext<GetCredentialByIdRequest> context)
+    private async Task Process(ConsumeContext<GetDoctorByIdRequest> context)
     {
-        GetCredentialByIdQuery query = new(context.Message.Id);
-        Result<CredentialResponse> queryResponse = await _sender.Send(query, context.CancellationToken);
+        GetDoctorByIdQuery query = new(context.Message.Id);
+        Result<DoctorResponse> queryResponse = await _sender.Send(query, context.CancellationToken);
 
         BusMessageResponse response = queryResponse.IsSuccess
             ? new BusMessageResponse().Done(
-                CredentialQueueResponse.Map(
+                DoctorQueueResponse.Map(
                     queryResponse.Value.Id, 
-                    queryResponse.Value.Email, 
-                    queryResponse.Value.CreatedOnUtc, 
-                    queryResponse.Value.ModifiedOnUtc).Serialize())
+                    queryResponse.Value.Name, 
+                    queryResponse.Value.Specialty, 
+                    queryResponse.Value.ExperienceInYears, 
+                    queryResponse.Value.CreatedOnUtc).Serialize())
             : new BusMessageResponse().NotFound();
 
         BusMessageResult result = new(response.Serialize());

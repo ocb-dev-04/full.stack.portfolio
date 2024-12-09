@@ -6,6 +6,7 @@ using Services.Auth.Domain.Abstractions;
 using Services.Auth.Persistence.Context;
 using Shared.Common.Helper.ErrorsHandler;
 using Value.Objects.Helper.Values.Domain;
+using System.Linq.Expressions;
 
 namespace Services.Auth.Persistence.Repositories;
 
@@ -32,6 +33,11 @@ internal sealed class CredentialRepository
 
         return found;
     }
+
+    /// <inheritdoc/>
+    public async Task<bool> ExistAsync(Expression<Func<Credential, bool>> filter, CancellationToken cancellationToken = default)
+        => await _table.AsNoTracking()
+                    .AnyAsync(filter, cancellationToken);
 
     /// <inheritdoc/>
     public async Task<Result<Credential>> ByEmailAsync(EmailAddress email, bool tracking = true, CancellationToken cancellationToken = default)
@@ -69,4 +75,5 @@ internal sealed class CredentialRepository
 
     public void Dispose()
         => _dbContext.Dispose();
+
 }
