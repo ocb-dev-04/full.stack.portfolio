@@ -33,6 +33,10 @@ internal sealed class PatientFluentConfiguration
             .IsRequired()
             .HasConversion<IntegerObjectConverter>();
 
+        builder.Property(e => e.Deleted)
+            .IsRequired()
+            .HasConversion<BooleanObjectConverter>();
+
         builder.ComplexProperty(i => i.AuditDates, navProps =>
         {
             navProps.Property(p => p.CreatedOnUtc)
