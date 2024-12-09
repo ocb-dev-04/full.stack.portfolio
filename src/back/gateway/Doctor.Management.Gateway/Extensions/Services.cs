@@ -3,10 +3,8 @@ using Microsoft.Extensions.Options;
 using Doctor.Management.Gateway.Settings;
 using Doctor.Management.Gateway.ProxyConfig;
 using Yarp.ReverseProxy.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Doctor.Management.Gateway.AuthClientServices;
 using Refit;
-using System;
+using Doctor.Management.Gateway.AuthClient;
 
 namespace Doctor.Management.Gateway.Extensions;
 
