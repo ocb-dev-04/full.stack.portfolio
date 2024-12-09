@@ -56,7 +56,7 @@ internal sealed class PatientFluentConfiguration
         });
 
         builder.HasQueryFilter(p
-            => p.Deleted.Equals(BooleanObject.CreateAsTrue()));
+            => p.Deleted.Equals(BooleanObject.CreateAsFalse()));
 
         builder.Metadata.SetSchema("patients");
     }
