@@ -38,7 +38,7 @@ internal sealed class DiagnosisRepository : IDiagnosisRepository
     public async Task<IReadOnlyCollection<Diagnosis>> ByPatientId(GuidObject patientId, int pageNumber, CancellationToken cancellationToken)
         => await _table
             .Find(w => w.PatientId.Equals(patientId))
-            .SortByDescending(s => s.AuditDates)
+            .SortByDescending(s => s.CreatedOnUtc)
             .Skip((pageNumber - 1) * _pageSize)
             .Limit(_pageSize)
             .ToListAsync(cancellationToken);
@@ -49,20 +49,20 @@ internal sealed class DiagnosisRepository : IDiagnosisRepository
 
     /// <inheritdoc/>
     public async Task CreateAsync(Diagnosis model, CancellationToken cancellationToken)
-        => await _context.AddCommand((async (cancellationToken) 
+        => await _context.AddCommand((async () 
             => await _table.InsertOneAsync(model, default, cancellationToken)));
 
     /// <inheritdoc/>
     public async Task<Result> DeleteAsync(GuidObject id, CancellationToken cancellationToken)
     {
-        await _context.AddCommand((async (cancellationToken) 
+        await _context.AddCommand((async () 
             => await _table.DeleteOneAsync(d => d.Id.Equals(id.ToString()), cancellationToken)));
         return Result.Success();
     }
 
     /// <inheritdoc/>
-    public async Task CommitAsync(CancellationToken cancellationToken)
-        => await _context.SaveChangesAsync(cancellationToken);
+    public void Commit()
+        => _context.SaveChanges();
 
     /// <inheritdoc/>
     public void Dispose()

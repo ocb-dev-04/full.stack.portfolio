@@ -1,5 +1,4 @@
-﻿using Value.Objects.Helper.Values.Complex;
-using Value.Objects.Helper.Values.Primitives;
+﻿using Value.Objects.Helper.Values.Primitives;
 
 namespace Service.Diagnoses.Domain.Entities;
 
@@ -14,7 +13,7 @@ public sealed partial class Diagnosis
     public StringObject Indications { get; private set; }
     public TimeSpan DosageInterval { get; set; }
 
-    public AuditDates AuditDates { get; init; } = AuditDates.Init();
+    public DateTimeOffset CreatedOnUtc { get; init; } = DateTimeOffset.UtcNow;
 
     private Diagnosis()
     {

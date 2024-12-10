@@ -46,6 +46,18 @@ public sealed class DiagnosesController : BaseController
 
         return response.Match(Ok, HandleErrorResults);
     }
+    
+    [HttpGet("dosage-intervals")]
+    [ProducesResponseType(typeof(IEnumerable<DosageIntervalResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetDosageIntervalCollection(CancellationToken cancellationToken)
+    {
+        GetDosageIntervalCollectionQuery query = new();
+        Result<IEnumerable<DosageIntervalResponse>> response = await _sender.Send(query, cancellationToken);
+
+        return response.Match(Ok, HandleErrorResults);
+    }
 
     #endregion
 

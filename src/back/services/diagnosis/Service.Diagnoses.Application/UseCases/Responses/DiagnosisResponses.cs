@@ -18,7 +18,7 @@ public sealed record DiagnosisResponse(
             entity.Medicine.Value,
             entity.Indications.Value,
             entity.DosageInterval,
-            entity.AuditDates.CreatedOnUtc);
+            entity.CreatedOnUtc);
 
     public DiagnosisQueueResponse MapToQueueResponse()
         => new DiagnosisQueueResponse(

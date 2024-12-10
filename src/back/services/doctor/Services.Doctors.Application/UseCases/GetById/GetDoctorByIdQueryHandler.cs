@@ -26,7 +26,7 @@ internal sealed class GetDoctorByIdQueryHandler
 
         Result<Doctor> found = await _doctorRepository.ByIdAsync(doctorId.Value, cancellationToken);
         if(found.IsFailure)
-            return Result.Failure<DoctorResponse>(doctorId.Error);
+            return Result.Failure<DoctorResponse>(found.Error);
 
         return DoctorResponse.Map(found.Value);
     }

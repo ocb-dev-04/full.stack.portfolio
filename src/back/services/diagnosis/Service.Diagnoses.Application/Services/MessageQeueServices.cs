@@ -15,10 +15,10 @@ internal sealed class MessageQeueServices
     private readonly IMultiBusService<IGeneralBus, GetPatientByIdRequest> _patientByIdRequest;
 
     private readonly static Error _doctorNotFound 
-        = Error.NotFound("doctorNotFound", "The doctor waas no found");
+        = Error.NotFound("doctorNotFound", "The doctor was no found");
     
     private readonly static Error _patientNotFound 
-        = Error.NotFound("patientNotFound", "The patient waas no found");
+        = Error.NotFound("patientNotFound", "The patient was no found");
 
     public MessageQeueServices(
         IMultiBusService<IGeneralBus, GetDoctorByIdRequest> doctorByIdRequest,

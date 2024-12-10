@@ -22,5 +22,5 @@ public interface IDiagnosisRepository
     /// <summary>
     /// Save all changes
     /// </summary>
-    Task CommitAsync(CancellationToken cancellationToken);
+    void Commit();
 }

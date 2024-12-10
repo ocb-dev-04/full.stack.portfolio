@@ -6,7 +6,7 @@ namespace Service.Diagnoses.Persistence.Context;
 
 internal sealed class NoRelationalContext : IDisposable
 {
-    private readonly List<Func<CancellationToken, Task>> _commands;
+    private readonly List<Func<Task>> _commands;
     private readonly IMongoDatabase _database;
     private int ChangeCount;
 
@@ -31,21 +31,15 @@ internal sealed class NoRelationalContext : IDisposable
     /// Save all change maked
     /// </summary>
     /// <returns></returns>
-    public async Task SaveChangesAsync(CancellationToken cancellationToken)
+    public void SaveChanges()
     {
         if (ChangeCount.Equals(0))
             return;
 
-        IEnumerable<Task> tasks = GetTasks(cancellationToken);
-        await Task.WhenAll(tasks);
-        
-        _commands.Clear();
-    }
+        foreach (Func<Task> command in _commands)
+            command.Invoke();
 
-    private IEnumerable<Task> GetTasks(CancellationToken cancellationToken)
-    {
-        foreach (Func<CancellationToken, Task> command in _commands)
-            yield return command.Invoke(cancellationToken);
+        _commands.Clear();
     }
 
     /// <summary>
@@ -60,12 +54,12 @@ internal sealed class NoRelationalContext : IDisposable
     /// </summary>
     /// <param name="func"></param>
     /// <returns></returns>
-    public Task AddCommand(Func<CancellationToken, Task> func)
+    public async Task AddCommand(Func<Task> func)
     {
         _commands.Add(func);
         ChangeCount = _commands.Count;
 
-        return Task.CompletedTask;
+        await Task.CompletedTask;
     }
 
     /// <summary>
@@ -74,7 +68,7 @@ internal sealed class NoRelationalContext : IDisposable
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     public IMongoCollection<T> GetCollection<T>()
-        => Database.GetCollection<T>(typeof(T).Name.ToLower());
+        => Database.GetCollection<T>(typeof(T).Name);
 
     /// <summary>
     /// Dispose method

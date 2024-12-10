@@ -1,5 +1,6 @@
-﻿using Shared.Common.Helper.ErrorsHandler;
+﻿using Service.Diagnoses.Domain.Enums;
 using Service.Diagnoses.Domain.Entities;
+using Shared.Common.Helper.ErrorsHandler;
 using Service.Diagnoses.Domain.Abstractions;
 using Value.Objects.Helper.Values.Primitives;
 using Service.Diagnoses.Application.Services;
@@ -41,10 +42,10 @@ internal sealed class CreateDiagnosisCommandHandler
             StringObject.Create(request.Disease),
             StringObject.Create(request.Medicine),
             StringObject.Create(request.Indications),
-            request.DosageInterval);
+            request.DosageInterval.ToTimeSpan());
 
         await _diagnosisRepository.CreateAsync(created, cancellationToken);
-        await _diagnosisRepository.CommitAsync(cancellationToken);
+        _diagnosisRepository.Commit();
 
         return DiagnosisResponse.Map(created);
     }

@@ -30,9 +30,6 @@ internal class DiagnosisSerializer
 
             cm.MapMember(c => c.Indications)
               .SetSerializer(new StringObjectSerializer());
-
-            cm.MapMember(c => c.AuditDates)
-              .SetSerializer(new DatesSerializer());
         });
     }
 }

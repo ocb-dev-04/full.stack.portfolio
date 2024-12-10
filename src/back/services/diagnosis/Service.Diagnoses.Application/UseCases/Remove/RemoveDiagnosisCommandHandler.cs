@@ -40,7 +40,7 @@ internal sealed class RemoveDiagnosisCommandHandler
             return Result.Failure(DiagnosisErrors.YouAreNotTheOwner);
 
         await _diagnosisRepository.DeleteAsync(found.Value.Id, cancellationToken);
-        await _diagnosisRepository.CommitAsync(cancellationToken);
+        _diagnosisRepository.Commit();
 
         return Result.Success();
     }

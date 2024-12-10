@@ -20,7 +20,8 @@ internal sealed class GetDiagnosisByIdQueryHandler
 
     public async Task<Result<DiagnosisResponse>> Handle(GetDiagnosisByIdQuery request, CancellationToken cancellationToken)
     {
-        Result<Diagnosis> found = await _diagnosisRepository.ByIdAsync(GuidObject.Create(request.Id.ToString()), cancellationToken);
+        GuidObject diagnosisId = GuidObject.Create(request.Id.ToString());
+        Result<Diagnosis> found = await _diagnosisRepository.ByIdAsync(diagnosisId, cancellationToken);
         if (found.IsFailure)
             return Result.Failure<DiagnosisResponse>(found.Error);
 
