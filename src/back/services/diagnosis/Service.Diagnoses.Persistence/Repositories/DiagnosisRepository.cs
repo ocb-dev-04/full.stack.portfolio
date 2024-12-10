@@ -56,7 +56,7 @@ internal sealed class DiagnosisRepository : IDiagnosisRepository
     public async Task<Result> DeleteAsync(GuidObject id, CancellationToken cancellationToken)
     {
         await _context.AddCommand((async () 
-            => await _table.DeleteOneAsync(d => d.Id.Equals(id.ToString()), cancellationToken)));
+            => await _table.DeleteOneAsync(d => d.Id.Equals(id), cancellationToken)));
         return Result.Success();
     }
 
