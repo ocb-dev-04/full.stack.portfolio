@@ -43,7 +43,7 @@ internal sealed class UpdateDoctorCommandValidator
         .NotNull()
             .WithMessage(ValidationConstants.RequiredField)
         .MaximumLength(100)
-            .WithMessage(ValidationConstants.ShortField);
+            .WithMessage(ValidationConstants.LongField);
 
         RuleFor(x => x.Body.Specialty)
             .Cascade(CascadeMode.Continue)
@@ -52,7 +52,7 @@ internal sealed class UpdateDoctorCommandValidator
         .NotNull()
             .WithMessage(ValidationConstants.RequiredField)
         .MaximumLength(50)
-            .WithMessage(ValidationConstants.ShortField);
+            .WithMessage(ValidationConstants.LongField);
 
         RuleFor(x => x.Body.ExperienceInYears)
             .Cascade(CascadeMode.Continue)

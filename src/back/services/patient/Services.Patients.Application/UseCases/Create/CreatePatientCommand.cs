@@ -28,7 +28,7 @@ internal sealed class CreatePatientCommandValidator
         .NotNull()
             .WithMessage(ValidationConstants.RequiredField)
         .MaximumLength(100)
-            .WithMessage(ValidationConstants.ShortField);
+            .WithMessage(ValidationConstants.LongField);
 
         RuleFor(x => x.Age)
             .Cascade(CascadeMode.Continue)

@@ -1,12 +1,10 @@
 ﻿using System.Linq.Expressions;
 
-using Value.Objects.Helper.Abstractions;
-
 namespace Shared.Domain.Abstractions.Repositories;
 
 public interface IBooleanGenericRepository<TEntity, TId>
         where TEntity : class
-        where TId : BaseId
+        where TId : notnull
 {
     /// <summary>
     /// Check if exist some <see cref="TEntity"/> with defined criteria

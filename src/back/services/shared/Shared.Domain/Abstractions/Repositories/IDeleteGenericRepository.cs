@@ -1,14 +1,13 @@
-﻿using Value.Objects.Helper.Abstractions;
-using Shared.Common.Helper.ErrorsHandler;
+﻿using Shared.Common.Helper.ErrorsHandler;
 
 namespace Shared.Domain.Abstractions.Repositories;
 
 public interface IDeleteAsyncGenericRepository<TEntity, TId>
         where TEntity : class
-        where TId : BaseId
+        where TId : notnull
 {
     /// <summary>
-    /// Delete some <see cref="TEntity"/> by <see cref="TId"/>
+    /// Delete some <see cref="{TEntity}"/> by <see cref="{TId}"/>
     /// </summary>
     /// <param name="id"></param>
     /// <param name="cancellationToken"></param>

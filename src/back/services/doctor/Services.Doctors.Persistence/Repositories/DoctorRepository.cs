@@ -17,7 +17,6 @@ internal sealed class DoctorRepository
 {
     private readonly AppDbContext _dbContext;
     private readonly DbSet<Doctor> _table;
-    private readonly static int _pageSize = 10;
 
     public DoctorRepository(AppDbContext dbContext)
     {
@@ -63,7 +62,7 @@ internal sealed class DoctorRepository
                         s.Specialty,
                         s.ExperienceInYears,
                         s.AuditDates))
-                    .Skip((pageNumber - 1) * _pageSize).Take(_pageSize)
+                    .Paginate(pageNumber)
                     .ToArrayAsync(cancellationToken);
 
     /// <inheritdoc/>
@@ -77,7 +76,7 @@ internal sealed class DoctorRepository
                         s.Specialty,
                         s.ExperienceInYears,
                         s.AuditDates))
-                    .Skip((pageNumber - 1) * _pageSize).Take(_pageSize)
+                    .Paginate(pageNumber)
                     .ToArrayAsync(cancellationToken);
 
     /// <inheritdoc/>

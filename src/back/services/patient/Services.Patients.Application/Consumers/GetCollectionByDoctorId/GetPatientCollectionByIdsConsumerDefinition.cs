@@ -2,11 +2,11 @@
 
 namespace Services.Patients.Application.Consumers;
 
-internal class GetPatientCollectionByDoctorIdsConsumerDefinition
+internal sealed class GetPatientCollectionByDoctorIdsConsumerDefinition
      : ConsumerDefinition<GetPatientCollectionByDoctorIdsConsumer>
 {
 
-    private readonly static string _consumerName = "get-patient-collection-by-doctor-by-id-queue";
+    private readonly static string _consumerName = "get-patient-collection-by-doctor-id-queue";
 
     public GetPatientCollectionByDoctorIdsConsumerDefinition()
     {

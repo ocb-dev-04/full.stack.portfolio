@@ -29,4 +29,12 @@
 		<PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.9.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\..\shared\Shared.Consul.Configuration\Shared.Consul.Configuration.csproj" />
+	  <ProjectReference Include="..\..\shared\Shared.Global.Sources\Shared.Global.Sources.csproj" />
+	  <ProjectReference Include="..\Service.Diagnoses.Application\Service.Diagnoses.Application.csproj" />
+	  <ProjectReference Include="..\Service.Diagnoses.Persistence\Service.Diagnoses.Persistence.csproj" />
+	  <ProjectReference Include="..\Service.Diagnoses.Presentation\Service.Diagnoses.Presentation.csproj" />
+	</ItemGroup>
+
 </Project>

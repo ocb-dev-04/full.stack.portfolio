@@ -38,16 +38,7 @@ internal sealed class GetPatientCollectionByDoctorIdsConsumer
         GetPatientCollectionByDoctorIdQuery query = new(context.Message.Id, context.Message.PageNumber);
         Result<IEnumerable<PatientResponse>> queryResponse = await _sender.Send(query, context.CancellationToken);
 
-        if (queryResponse.IsFailure)
-        {
-            BusMessageResponse failureResponse = new BusMessageResponse().Failed(queryResponse.Error.Translation, queryResponse.Error.Description);
-            BusMessageResult failureResult = new(failureResponse.Serialize());
-            await context.RespondAsync<BusMessageResult>(failureResult);
-            return;
-        }
-
-        IEnumerable<PatientQueueResponse> collection = queryResponse.Value.Select(s 
-            => PatientQueueResponse.Map(s.Id, s.Name, s.Age, s.CreatedOnUtc));
+        IEnumerable<PatientQueueResponse> collection = queryResponse.Value.Select(s => s.MapToQueueResponse());
         string serialize = new PatientCollectionQueueResponse(collection).Serialize();
 
         BusMessageResponse response = new BusMessageResponse().Done(serialize);

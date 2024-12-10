@@ -1,11 +1,11 @@
-﻿using Shared.Message.Queue.Requests;
+﻿using Shared.Common.Helper.Enums;
+using Shared.Message.Queue.Requests;
+using Shared.Common.Helper.Extensions;
 using Common.Services.Bus.Abstractions;
+using Shared.Common.Helper.ErrorsHandler;
 using Shared.Message.Queue.Requests.Buses;
 using Shared.Message.Queue.Requests.Requests;
 using Shared.Common.Helper.Models.QueueResponses;
-using Shared.Common.Helper.Enums;
-using Shared.Common.Helper.Extensions;
-using Shared.Common.Helper.ErrorsHandler;
 
 namespace Services.Doctors.Application.Services;
 

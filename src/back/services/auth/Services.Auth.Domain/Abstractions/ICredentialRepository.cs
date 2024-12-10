@@ -9,7 +9,7 @@ namespace Services.Auth.Domain.Abstractions;
 public interface ICredentialRepository
     : ISingleQueriesGenericRepository<Credential, CredentialId>,
         IBooleanGenericRepository<Credential, CredentialId>,
-        ICreateGenericRepository<Credential, CredentialId>,
+        ICreateGenericRepository<Credential>,
         IDeleteAsyncGenericRepository<Credential, CredentialId>,
         IDisposable
 {

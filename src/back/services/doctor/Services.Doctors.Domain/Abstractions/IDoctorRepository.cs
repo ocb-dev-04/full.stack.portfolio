@@ -1,16 +1,16 @@
 ﻿using Services.Doctors.Domain.Entities;
 using Services.Doctors.Domain.StrongIds;
 using Value.Objects.Helper.Values.Primitives;
-using Shared.Domain.Abstractions.Repositories;
 using Shared.Common.Helper.ErrorsHandler;
 using Services.Doctors.Domain.Dtos;
+using Shared.Domain.Abstractions.Repositories;
 
 namespace Services.Doctors.Domain.Abstractions;
 
 public interface IDoctorRepository
     : ISingleQueriesGenericRepository<Doctor, DoctorId>,
         IBooleanGenericRepository<Doctor, DoctorId>,
-        ICreateGenericRepository<Doctor, DoctorId>,
+        ICreateGenericRepository<Doctor>,
         IDeleteAsyncGenericRepository<Doctor, DoctorId>,
         IDisposable
 {

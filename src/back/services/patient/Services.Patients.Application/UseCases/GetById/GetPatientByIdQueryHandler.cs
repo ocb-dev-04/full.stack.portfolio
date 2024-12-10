@@ -11,6 +11,9 @@ internal sealed class GetPatientByIdQueryHandler
 {
     private readonly IPatientRepository _patientRepository;
 
+    private readonly static Error _patientSetAsDeleted
+        = Error.NotFound("patientSetAsDeleted", "The patient is set as deleted");
+
     public GetPatientByIdQueryHandler(IPatientRepository patientRepository)
     {
         ArgumentNullException.ThrowIfNull(patientRepository, nameof(patientRepository));
@@ -27,6 +30,9 @@ internal sealed class GetPatientByIdQueryHandler
         Result<Patient> found = await _patientRepository.ByIdAsync(patientId.Value, cancellationToken);
         if (found.IsFailure)
             return Result.Failure<PatientResponse>(found.Error);
+
+        if(found.Value.Deleted.Value)
+            return Result.Failure<PatientResponse>(_patientSetAsDeleted);
 
         return PatientResponse.Map(found.Value);
     }

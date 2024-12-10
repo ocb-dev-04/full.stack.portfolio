@@ -5,10 +5,10 @@ namespace Shared.Domain.Abstractions.Repositories;
 
 public interface ISingleQueriesGenericRepository<TEntity, TId>
         where TEntity : class
-        where TId : BaseId
+        where TId : notnull
 {
     /// <summary>
-    /// Get a <see cref="TEntity"/> by <see cref="BaseId"/>
+    /// Get a <see cref="TEntity"/> by <see cref="{TId}"/>
     /// </summary>
     /// <param name="id"></param>
     /// <param name="tracking"></param>

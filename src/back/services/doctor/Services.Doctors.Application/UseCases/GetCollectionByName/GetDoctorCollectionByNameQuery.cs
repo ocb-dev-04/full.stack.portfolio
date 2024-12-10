@@ -20,7 +20,7 @@ internal sealed class GetDoctorCollectionByNameQueryValidator
         .NotNull()
             .WithMessage(ValidationConstants.RequiredField)
         .MaximumLength(100)
-            .WithMessage(ValidationConstants.ShortField);
+            .WithMessage(ValidationConstants.LongField);
 
         RuleFor(x => x.PageNumber)
             .Cascade(CascadeMode.Continue)

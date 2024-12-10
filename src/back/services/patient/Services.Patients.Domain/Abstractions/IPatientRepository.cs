@@ -8,7 +8,7 @@ namespace Services.Patients.Domain.Abstractions;
 public interface IPatientRepository
     : ISingleQueriesGenericRepository<Patient, PatientId>,
         IBooleanGenericRepository<Patient, PatientId>,
-        ICreateGenericRepository<Patient, PatientId>,
+        ICreateGenericRepository<Patient>,
         IDisposable
 {
     /// <summary>

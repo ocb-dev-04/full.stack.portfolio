@@ -7,8 +7,8 @@ namespace Services.Doctors.Domain.StrongIds;
 public sealed class DoctorId
     : BaseId
 {
-    private static readonly Error _credentialIdCantBeNullOrEmpty
-        = new(500, "credentialIdCantBeNullOrEmpty", "The credential id cant be null or empty");
+    private static readonly Error _doctorIdCantBeNullOrEmpty
+        = new(500, "doctorIdCantBeNullOrEmpty", "The doctor id cant be null or empty");
 
     public Guid Value { get; init; }
 
@@ -23,7 +23,7 @@ public sealed class DoctorId
     public static Result<DoctorId> Create(Guid id)
     {
         if (string.IsNullOrEmpty(id.ToString()))
-            return Result.Failure<DoctorId>(_credentialIdCantBeNullOrEmpty);
+            return Result.Failure<DoctorId>(_doctorIdCantBeNullOrEmpty);
 
         return new DoctorId(id);
     }
