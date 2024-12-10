@@ -1,7 +1,7 @@
 ﻿using Value.Objects.Helper.Values.Complex;
 using Value.Objects.Helper.Values.Primitives;
 
-namespace Services.Diagnoses.Domain.Entities;
+namespace Service.DiagnosesDomain.Entities;
 
 public sealed partial class Diagnosis
 {

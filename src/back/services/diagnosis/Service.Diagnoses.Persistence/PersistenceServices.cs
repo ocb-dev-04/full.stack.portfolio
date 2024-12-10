@@ -1,5 +1,5 @@
-﻿using Service.Diagnoses.Persistence.Context;
-using Services.Diagnoses.Domain.Abstractions;
+﻿using Service.DiagnosesDomain.Abstractions;
+using Service.Diagnoses.Persistence.Context;
 using Microsoft.Extensions.DependencyInjection;
 using Service.Diagnoses.Persistence.Serializers;
 using Service.Diagnoses.Persistence.Repositories;

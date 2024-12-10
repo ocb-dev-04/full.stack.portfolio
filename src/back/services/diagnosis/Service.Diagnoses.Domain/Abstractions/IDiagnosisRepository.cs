@@ -1,8 +1,8 @@
-﻿using Services.Diagnoses.Domain.Entities;
+﻿using Service.DiagnosesDomain.Entities;
 using Value.Objects.Helper.Values.Primitives;
 using Shared.Domain.Abstractions.Repositories;
 
-namespace Services.Diagnoses.Domain.Abstractions;
+namespace Service.DiagnosesDomain.Abstractions;
 
 public interface IDiagnosisRepository
     : ISingleQueriesGenericRepository<Diagnosis, GuidObject>,

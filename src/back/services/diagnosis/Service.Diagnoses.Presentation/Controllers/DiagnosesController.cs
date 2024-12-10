@@ -5,7 +5,7 @@ using Shared.Common.Helper.Extensions;
 using Shared.Common.Helper.ErrorsHandler;
 using System.ComponentModel.DataAnnotations;
 using Service.Diagnoses.Application.UseCases;
-using Services.Diagnoses.Presentation.Controllers.Base;
+using Service.DiagnosesPresentation.Controllers.Base;
 
 namespace Service.Diagnoses.Presentation.Controllers;
 

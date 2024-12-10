@@ -1,10 +1,10 @@
 ﻿using MongoDB.Driver;
 using System.Linq.Expressions;
-using Services.Diagnoses.Domain.Errors;
-using Services.Diagnoses.Domain.Entities;
+using Service.DiagnosesDomain.Errors;
+using Service.DiagnosesDomain.Entities;
 using Shared.Common.Helper.ErrorsHandler;
 using Service.Diagnoses.Persistence.Context;
-using Services.Diagnoses.Domain.Abstractions;
+using Service.DiagnosesDomain.Abstractions;
 using Value.Objects.Helper.Values.Primitives;
 
 namespace Service.Diagnoses.Persistence.Repositories;

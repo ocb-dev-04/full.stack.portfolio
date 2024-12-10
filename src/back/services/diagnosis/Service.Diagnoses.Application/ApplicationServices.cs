@@ -4,12 +4,12 @@ using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Services.Diagnoses.Application.Services;
+using Service.DiagnosesApplication.Services;
 using Shared.Domain.Settings;
 using Shared.Global.Sources.Behaviors;
 using Shared.Message.Queue.Requests.Buses;
 
-namespace Services.Diagnoses.Application;
+namespace Service.DiagnosesApplication;
 
 public static class ApplicationServices
 {

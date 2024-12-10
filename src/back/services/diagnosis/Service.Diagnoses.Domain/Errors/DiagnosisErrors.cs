@@ -1,6 +1,6 @@
 ﻿using Shared.Common.Helper.ErrorsHandler;
 
-namespace Services.Diagnoses.Domain.Errors;
+namespace Service.DiagnosesDomain.Errors;
 
 public sealed class DiagnosisErrors
 {
