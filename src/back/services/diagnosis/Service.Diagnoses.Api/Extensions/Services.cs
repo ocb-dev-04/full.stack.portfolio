@@ -32,12 +32,8 @@ public static class Services
             options.EnableForHttps = true;
         });
 
-        services.AddOptions<RelationalDatabaseSettings>()
-            .BindConfiguration(nameof(RelationalDatabaseSettings))
-            .ValidateDataAnnotations()
-            .ValidateOnStart();
-        services.AddOptions<CacheDatabaseSettings>()
-            .BindConfiguration(nameof(CacheDatabaseSettings))
+        services.AddOptions<NoRelationalDatabaseSettings>()
+            .BindConfiguration(nameof(NoRelationalDatabaseSettings))
             .ValidateDataAnnotations()
             .ValidateOnStart();
         services.AddOptions<MessageQueueSettings>()

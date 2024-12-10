@@ -1,10 +1,9 @@
 ﻿using Consul;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Logging;
 using Shared.Consul.Configuration.Settings;
 using Microsoft.Extensions.DependencyInjection;
-using System.Threading;
-using Microsoft.Extensions.Logging;
 
 namespace Shared.Consul.Configuration;
 

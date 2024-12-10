@@ -44,6 +44,10 @@ public static class Services
             .BindConfiguration(nameof(RelationalDatabaseSettings))
             .ValidateDataAnnotations()
             .ValidateOnStart();
+        services.AddOptions<CacheDatabaseSettings>()
+            .BindConfiguration(nameof(CacheDatabaseSettings))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
         services.AddOptions<MessageQueueSettings>()
             .BindConfiguration(nameof(MessageQueueSettings))
             .ValidateDataAnnotations()
@@ -132,7 +136,11 @@ public static class Services
                 sp => sp.GetRequiredService<IOptions<RelationalDatabaseSettings>>().Value.ConnectionString,
                 name: "PostgreSQL",
                 tags: new[] { "database", "relational" }
-            );
+            )
+            .AddRedis(
+                sp => sp.GetRequiredService<IOptions<CacheDatabaseSettings>>().Value.ConnectionString,
+                name: "Redis",
+                tags: new[] { "database", "in memory" });
 
         return services;
     }

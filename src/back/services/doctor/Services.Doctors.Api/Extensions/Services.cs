@@ -52,43 +52,10 @@ public static class Services
         services.AddSharedCommonProviders()
             .AddHashingServices();
 
-        services.AddCustomSwagger()
+        services.AddSwaggerGen()
             .AddConsulServices()
             .AddHealthCheck()
             .AddTelemetries(configuration);
-    }
-
-    
-    private static IServiceCollection AddCustomSwagger(this IServiceCollection services)
-    {
-        services.AddSwaggerGen(options =>
-        {
-            options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            {
-                Name = "Doctorsorization",
-                Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
-                Scheme = "Bearer",
-                BearerFormat = "JWT",
-                In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-                Description = "JWT Doctorsorization header using the Bearer scheme."
-            });
-
-            options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement {
-                    {
-                        new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-                        {
-                                Reference = new Microsoft.OpenApi.Models.OpenApiReference
-                                {
-                                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                                    Id = "Bearer"
-                                }
-                        },
-                        Array.Empty<string>()
-                    }
-                });
-        });
-
-        return services;
     }
 
     private static IServiceCollection AddHealthCheck(this IServiceCollection services)
@@ -98,20 +65,11 @@ public static class Services
                 sp => sp.GetRequiredService<IOptions<RelationalDatabaseSettings>>().Value.ConnectionString,
                 name: "PostgreSQL",
                 tags: new[] { "database", "relational" }
-            );
-            //.AddMongoDb(
-            //    sp => sp.GetRequiredService<IOptions<NoRelationalDatabaseSettings>>().Value.ConnectionString,
-            //    name: "MongoDB",
-            //    tags: new[] { "database", "no relational" })
-            //.AddRedis(
-            //    sp => sp.GetRequiredService<IOptions<CacheDatabaseSettings>>().Value.ConnectionString,
-            //    name: "Redis",
-            //    tags: new[] { "database", "in memory" })
-            //.AddRabbitMQ(
-            //    services.BuildServiceProvider().GetRequiredService<IOptions<MessageQueueSettings>>().Value.Url,
-            //    name: "RabbitMQ",
-            //    tags: new[] { "queue", "messaging" }
-            //);
+            )
+            .AddRedis(
+                sp => sp.GetRequiredService<IOptions<CacheDatabaseSettings>>().Value.ConnectionString,
+                name: "Redis",
+                tags: new[] { "database", "in memory" });
 
         return services;
     }

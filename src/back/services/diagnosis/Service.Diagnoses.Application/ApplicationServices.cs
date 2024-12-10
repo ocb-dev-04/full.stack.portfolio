@@ -4,6 +4,7 @@ using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Service.Diagnoses.Application.Consumers;
 using Service.DiagnosesApplication.Services;
 using Shared.Domain.Settings;
 using Shared.Global.Sources.Behaviors;
@@ -42,7 +43,7 @@ public static class ApplicationServices
         {
             busRegConfig.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter(prefix: string.Empty, includeNamespace: false));
 
-            //busRegConfig.AddConsumer<GetDoctorByIdConsumer, GetDoctorByIdConsumerDefinition>();
+            busRegConfig.AddConsumer<GetDiagnosisCollectionByPatientIdConsumer, GetDiagnosisCollectionByPatientIdConsumerDefinition>();
 
             busRegConfig.UsingRabbitMq((ctx, config) =>
             {
