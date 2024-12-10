@@ -38,7 +38,7 @@ internal sealed class DiagnosisRepository : IDiagnosisRepository
     public async Task<IReadOnlyCollection<Diagnosis>> ByPatientId(GuidObject patientId, int pageNumber, CancellationToken cancellationToken)
         => await _table
             .Find(w => w.PatientId.Equals(patientId))
-            .SortByDescending(s => s.AuditDates.CreatedOnUtc)
+            .SortByDescending(s => s.AuditDates)
             .Skip((pageNumber - 1) * _pageSize)
             .Limit(_pageSize)
             .ToListAsync(cancellationToken);

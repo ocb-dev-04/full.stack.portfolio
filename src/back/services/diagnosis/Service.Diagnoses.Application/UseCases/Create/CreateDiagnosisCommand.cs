@@ -69,7 +69,7 @@ internal sealed class CreateDiagnosisCommandValidator
             .WithMessage(ValidationConstants.RequiredField)
         .Must(interval => interval > TimeSpan.Zero)
             .WithMessage(_dosageIntervalMustBeGreaterThanZero)
-        .Must(interval => interval <= TimeSpan.FromHours(24))
+        .Must(interval => interval <= TimeSpan.FromDays(1))
             .WithMessage(_dosageIntervalCannotExceedOneDay);
     }
 }

@@ -43,6 +43,7 @@ public static class ApplicationServices
         {
             busRegConfig.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter(prefix: string.Empty, includeNamespace: false));
 
+            busRegConfig.AddConsumer<GetPatientByIdConsumer, GetPatientByIdConsumerDefinition>();
             busRegConfig.AddConsumer<GetPatientCollectionByDoctorIdsConsumer, GetPatientCollectionByDoctorIdsConsumerDefinition>();
 
             busRegConfig.UsingRabbitMq((ctx, config) =>
