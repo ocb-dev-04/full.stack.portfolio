@@ -56,11 +56,7 @@ public static class Services
 
     private static IServiceCollection AddHealthCheck(this IServiceCollection services)
     {
-        services.AddHealthChecks()
-            .AddMongoDb(
-                sp => sp.GetRequiredService<IOptions<NoRelationalDatabaseSettings>>().Value.ConnectionString,
-                name: "MongoDB",
-                tags: new[] { "database", "no relational" });
+        services.AddHealthChecks();
 
         return services;
     }

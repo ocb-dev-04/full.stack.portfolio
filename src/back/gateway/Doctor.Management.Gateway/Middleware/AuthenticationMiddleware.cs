@@ -1,6 +1,8 @@
 ﻿using Refit;
 using System.Text.Json;
 using Doctor.Management.Gateway.AuthClient;
+using System.Net;
+using Microsoft.AspNetCore.Http;
 
 namespace Doctor.Management.Gateway.Middleware;
 
@@ -11,6 +13,8 @@ public sealed class AuthenticationMiddleware
 
     private readonly static string _authServicesIdentifier = "auth";
     private readonly static string _authHeaderIdentifier = "Authorization";
+    private readonly static string _credentialHeaderKey = "X-Credential-Id";
+    private readonly static string _responseContentType = "application/json";
 
     public AuthenticationMiddleware(RequestDelegate next, IAuthClient authClient)
     {
@@ -46,7 +50,7 @@ public sealed class AuthenticationMiddleware
                 return;
             }
 
-            context.Request.Headers.TryAdd("X-Credential-Id", response.Content!.Id.ToString());
+            context.Request.Headers.TryAdd(_credentialHeaderKey, response.Content!.Id.ToString());
         }
         catch (Exception)
         {
@@ -83,15 +87,24 @@ public sealed class AuthenticationMiddleware
 
     private async Task RespondWithAuthServiceError(HttpContext context, ApiResponse<AuthResponse> response)
     {
-        context.Response.StatusCode = (int)response.StatusCode;
-        context.Response.ContentType = "application/json";
-        await context.Response.WriteAsJsonAsync(response.Content);
+        int statusCode = (int)response.StatusCode;
+        context.Response.StatusCode = statusCode;
+
+        bool isUnauth = statusCode.Equals(StatusCodes.Status401Unauthorized);
+        if (!isUnauth)
+            context.Response.ContentType = _responseContentType;
+
+        string responsesByStatusCode = isUnauth
+                ? string.Empty
+                : JsonSerializer.Serialize(response.Content);
+
+        await context.Response.WriteAsync(responsesByStatusCode);
     }
 
     private async Task RespondWithInternalServerError(HttpContext context)
     {
         context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-        context.Response.ContentType = "application/json";
+        context.Response.ContentType = _responseContentType;
         ProblemDetails problemDetails = new()
         {
             Status = StatusCodes.Status500InternalServerError,
