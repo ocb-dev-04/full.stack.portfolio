@@ -1,22 +1,26 @@
-var builder = WebApplication.CreateBuilder(args);
+using Shared.Consul.Configuration;
+using Service.Diagnoses.Persistence;
+using Services.Diagnoses.Api.Extensions;
+using Shared.Global.Sources.Middlewares;
 
-// Add services to the container.
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.AddServices();
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
+WebApplication app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseAuthorization();
+app.UseConsultServiceRegistry();
+app.UseCustomHealthChecks();
+app.UseResponseCompression();
+
+app.UseRouting();
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.MapControllers();
 

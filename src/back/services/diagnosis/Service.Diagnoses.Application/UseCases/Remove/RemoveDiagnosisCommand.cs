@@ -4,11 +4,11 @@ using CQRS.MediatR.Helper.Abstractions.Messaging;
 
 namespace Service.Diagnoses.Application.UseCases;
 
-public sealed record RemovePatientCommand(Guid Id, Guid DoctorId)
+public sealed record RemoveDiagnosisCommand(Guid Id, Guid DoctorId)
     : ICommand;
 
 internal sealed class RemovePatientCommandValidator
-    : AbstractValidator<RemovePatientCommand>
+    : AbstractValidator<RemoveDiagnosisCommand>
 {
     public RemovePatientCommandValidator()
     {

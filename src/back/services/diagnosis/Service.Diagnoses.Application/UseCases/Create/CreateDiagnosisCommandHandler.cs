@@ -44,7 +44,7 @@ internal sealed class CreateDiagnosisCommandHandler
             request.DosageInterval);
 
         await _diagnosisRepository.CreateAsync(created, cancellationToken);
-        _diagnosisRepository.Commit();
+        await _diagnosisRepository.CommitAsync(cancellationToken);
 
         return DiagnosisResponse.Map(created);
     }
