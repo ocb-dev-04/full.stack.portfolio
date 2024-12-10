@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Common.Helper.ErrorsHandler;
 
-namespace Service.DiagnosesPresentation.Controllers.Base;
+namespace Service.Diagnoses.Presentation.Controllers.Base;
 
 public class BaseController : ControllerBase
 {

@@ -1,4 +1,4 @@
-﻿using Service.DiagnosesDomain.Entities;
+﻿using Service.Diagnoses.Domain.Entities;
 using Shared.Message.Queue.Requests.Responses;
 
 namespace Service.Diagnoses.Application.UseCases;

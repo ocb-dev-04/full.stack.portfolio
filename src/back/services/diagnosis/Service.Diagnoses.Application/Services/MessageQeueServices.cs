@@ -7,7 +7,7 @@ using Shared.Message.Queue.Requests.Requests;
 using Shared.Message.Queue.Requests.Responses;
 using Shared.Common.Helper.Models.QueueResponses;
 
-namespace Service.DiagnosesApplication.Services;
+namespace Service.Diagnoses.Application.Services;
 
 internal sealed class MessageQeueServices
 {

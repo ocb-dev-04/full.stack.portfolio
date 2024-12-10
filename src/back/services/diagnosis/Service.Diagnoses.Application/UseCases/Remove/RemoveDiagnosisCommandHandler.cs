@@ -1,9 +1,9 @@
-﻿using Service.DiagnosesDomain.Errors;
+﻿using Service.Diagnoses.Domain.Errors;
 using Shared.Common.Helper.ErrorsHandler;
-using Service.DiagnosesDomain.Entities;
-using Service.DiagnosesDomain.Abstractions;
+using Service.Diagnoses.Domain.Entities;
+using Service.Diagnoses.Domain.Abstractions;
 using Value.Objects.Helper.Values.Primitives;
-using Service.DiagnosesApplication.Services;
+using Service.Diagnoses.Application.Services;
 using Shared.Message.Queue.Requests.Responses;
 using CQRS.MediatR.Helper.Abstractions.Messaging;
 

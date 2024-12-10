@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Service.Diagnoses.Application.Consumers;
-using Service.DiagnosesApplication.Services;
+using Service.Diagnoses.Application.Services;
 using Shared.Domain.Settings;
 using Shared.Global.Sources.Behaviors;
 using Shared.Message.Queue.Requests.Buses;
 
-namespace Service.DiagnosesApplication;
+namespace Service.Diagnoses.Application;
 
 public static class ApplicationServices
 {

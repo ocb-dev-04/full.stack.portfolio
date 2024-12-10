@@ -1,4 +1,4 @@
-﻿using Service.DiagnosesDomain.Abstractions;
+﻿using Service.Diagnoses.Domain.Abstractions;
 using Service.Diagnoses.Persistence.Context;
 using Microsoft.Extensions.DependencyInjection;
 using Service.Diagnoses.Persistence.Serializers;

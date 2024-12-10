@@ -1,6 +1,6 @@
 using Shared.Consul.Configuration;
 using Service.Diagnoses.Persistence;
-using Service.DiagnosesApi.Extensions;
+using Service.Diagnoses.Api.Extensions;
 using Shared.Global.Sources.Middlewares;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);

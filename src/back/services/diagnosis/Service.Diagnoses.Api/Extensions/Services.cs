@@ -8,11 +8,11 @@ using OpenTelemetry.Resources;
 using Shared.Consul.Configuration;
 using Microsoft.Extensions.Options;
 using Service.Diagnoses.Persistence;
-using Service.DiagnosesApplication;
-using Service.DiagnosesPresentation;
+using Service.Diagnoses.Application;
+using Service.Diagnoses.Presentation;
 using Microsoft.AspNetCore.ResponseCompression;
 
-namespace Service.DiagnosesApi.Extensions;
+namespace Service.Diagnoses.Api.Extensions;
 
 public static class Services
 {

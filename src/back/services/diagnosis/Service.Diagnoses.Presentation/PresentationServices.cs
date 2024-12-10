@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Service.DiagnosesPresentation;
+namespace Service.Diagnoses.Presentation;
 
 public static class PresentationServices
 {

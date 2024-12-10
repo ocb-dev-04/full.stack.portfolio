@@ -1,6 +1,6 @@
 ﻿using Value.Objects.Helper.Values.Primitives;
 
-namespace Service.DiagnosesDomain.Entities;
+namespace Service.Diagnoses.Domain.Entities;
 
 public sealed partial class Diagnosis
 {

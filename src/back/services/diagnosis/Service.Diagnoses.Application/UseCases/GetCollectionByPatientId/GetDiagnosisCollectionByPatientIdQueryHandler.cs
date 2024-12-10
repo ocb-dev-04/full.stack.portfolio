@@ -1,6 +1,6 @@
 ﻿using Shared.Common.Helper.ErrorsHandler;
-using Service.DiagnosesDomain.Entities;
-using Service.DiagnosesDomain.Abstractions;
+using Service.Diagnoses.Domain.Entities;
+using Service.Diagnoses.Domain.Abstractions;
 using Value.Objects.Helper.Values.Primitives;
 using CQRS.MediatR.Helper.Abstractions.Messaging;
 

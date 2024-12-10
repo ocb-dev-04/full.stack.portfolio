@@ -1,5 +1,5 @@
 ﻿using MongoDB.Bson.Serialization;
-using Service.DiagnosesDomain.Entities;
+using Service.Diagnoses.Domain.Entities;
 using Value.Objects.Helper.BsonSerializer.Mongo;
 
 namespace Service.Diagnoses.Persistence.Serializers;
