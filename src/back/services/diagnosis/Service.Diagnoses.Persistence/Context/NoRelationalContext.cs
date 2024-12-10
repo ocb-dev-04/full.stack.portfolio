@@ -4,12 +4,13 @@ using Microsoft.Extensions.Options;
 
 namespace Service.Diagnoses.Persistence.Context;
 
-public sealed class NoRelationalContext : IDisposable
+internal sealed class NoRelationalContext : IDisposable
 {
     private readonly List<Func<CancellationToken, Task>> _commands;
-
+    private readonly IMongoDatabase _database;
     private int ChangeCount;
-    private IMongoDatabase Database { get; init; }
+
+    public IMongoDatabase Database => _database;
 
     /// <summary>
     /// <see cref="NoRelationalContext"/> public constructor
@@ -23,7 +24,7 @@ public sealed class NoRelationalContext : IDisposable
         ChangeCount = 0;
 
         MongoClient mongoClient = new(databaseOptions.Value.ConnectionString);
-        Database = mongoClient.GetDatabase(databaseOptions.Value.DatabaseName);
+        _database = mongoClient.GetDatabase(databaseOptions.Value.DatabaseName);
     }
 
     /// <summary>
@@ -32,6 +33,9 @@ public sealed class NoRelationalContext : IDisposable
     /// <returns></returns>
     public async Task SaveChangesAsync(CancellationToken cancellationToken)
     {
+        if (ChangeCount.Equals(0))
+            return;
+
         IEnumerable<Task> tasks = GetTasks(cancellationToken);
         await Task.WhenAll(tasks);
         

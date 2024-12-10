@@ -17,4 +17,9 @@ public static class PersistenceServices
 
         return services;
     }
+
+    public static void EnsureCollectionsExist(this IServiceProvider serviceProvider)
+    {
+        
+    }
 }

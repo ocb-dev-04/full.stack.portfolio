@@ -14,6 +14,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.CheckCollectionExist();
 app.UseConsultServiceRegistry();
 app.UseCustomHealthChecks();
 app.UseResponseCompression();
