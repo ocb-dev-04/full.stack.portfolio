@@ -16,9 +16,14 @@ public sealed partial class Patient
 
     public AuditDates AuditDates { get; init; } = AuditDates.Init();
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+    /// <summary>
+    /// Parameterless constructor for EF (migrations, deserialization, materialization, etc.)
+    /// </summary>
     private Patient()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     {
-
+        
     }
 
     private Patient(
