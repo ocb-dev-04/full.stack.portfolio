@@ -1,1 +1,0 @@
-dotnet publish ./gateway/Doctor.Management.Gateway --os linux --arch x64 -c Release

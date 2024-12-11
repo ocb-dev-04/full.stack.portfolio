@@ -38,4 +38,17 @@
 	  <ProjectReference Include="..\Service.Diagnoses.Presentation\Service.Diagnoses.Presentation.csproj" />
 	</ItemGroup>
 
+	<!-- start docker image creation -->
+	<PropertyGroup>
+		<ContainerImageTag>latest</ContainerImageTag>
+		<PublishProfile>DefaultContainer</PublishProfile>
+		<ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:8.0</ContainerBaseImage>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
+	<ItemGroup>
+		<ContainerPort Include="80" Type="tcp" />
+		<ContainerEnviromentVariable Include="ASPNETCORE_ENVIRONMENT" Value="Production" />
+	</ItemGroup>
+	<!-- end docker image creation -->
 </Project>
